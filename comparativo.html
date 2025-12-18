@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comparativo 3D - SF-36</title>
+    
+    <!-- Highcharts para Gráficos 3D -->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/highcharts-3d.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+    <style>
+        :root { --primary: #20c997; --primary-dark: #1aa179; --bg: #f4f7f6; --white: #ffffff; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg); margin: 0; padding: 20px; color: #333; }
+        
+        .container { max-width: 1200px; margin: 0 auto; }
+        
+        /* Header */
+        header { background: var(--white); padding: 20px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; border-left: 5px solid var(--primary); }
+        h1 { margin: 0; color: #333; font-size: 1.5em; }
+        
+        /* Painel de Controle */
+        .control-panel { background: var(--white); padding: 25px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; display: flex; gap: 15px; align-items: flex-end; flex-wrap: wrap; }
+        
+        .input-group { flex: 1; min-width: 250px; }
+        label { font-weight: bold; display: block; margin-bottom: 8px; color: #555; }
+        select { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 5px; font-size: 1em; background: #fff; }
+        
+        /* Botões */
+        .btn { padding: 12px 25px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; transition: all 0.2s; color: white; height: 45px; }
+        .btn-add { background-color: var(--primary); }
+        .btn-add:hover { background-color: var(--primary-dark); transform: translateY(-2px); }
+        .btn-clear { background-color: #dc3545; }
+        .btn-clear:hover { background-color: #c82333; }
+
+        /* Área do Gráfico */
+        .chart-container { background: var(--white); padding: 20px; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); height: 600px; }
+        
+        /* Lista de Selecionados */
+        #selected-list { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .tag { background: #e9ecef; padding: 5px 15px; border-radius: 20px; font-size: 0.9em; display: flex; align-items: center; gap: 8px; border: 1px solid #ccc; }
+        .tag-color { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+    /* --- NOVO CSS DO MENU SUPERIOR --- */
+    .app-header {
+        background-color: #ffffff;
+        padding: 10px 40px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        margin-bottom: 20px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .logo-area { display: flex; align-items: center; gap: 12px; }
+    .logo-img { height: 40px; width: auto; }
+    .app-name { font-size: 1.4rem; font-weight: 700; color: #0056b3; margin: 0; }
+
+    .nav-menu { list-style: none; display: flex; gap: 30px; margin: 0; padding: 0; }
+    .nav-menu a { text-decoration: none; color: #666; font-weight: 600; transition: 0.3s; position: relative; }
+    .nav-menu a:hover, .nav-menu a.active { color: #0056b3; }
+    
+    /* Linha animada abaixo do link */
+    .nav-menu a::after {
+        content: ''; position: absolute; width: 0; height: 2px; bottom: -5px; left: 0;
+        background-color: #0056b3; transition: width 0.3s;
+    }
+    .nav-menu a:hover::after, .nav-menu a.active::after { width: 100%; }
+</style>
+</head>
+<body>
+<!-- MENU SUPERIOR -->
+<nav class="app-header">
+    <div class="logo-area">
+        <!-- Ícone de exemplo (substitua pelo seu logo se tiver) -->
+        <img src="https://cdn-icons-png.flaticon.com/512/2966/2966334.png" alt="Logo" class="logo-img">
+        <h2 class="app-name">SF-36 Analytics</h2>
+    </div>
+
+    <ul class="nav-menu">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="dashboard.html">Relatório</a></li>
+        <li><a href="comparativo.html" class="active">Comparação</a></li>
+    </ul>
+</nav>
+<div class="container">
+    <header>
+        <h1>Comparativo Multidimensional 3D</h1>
+        <span style="color: #666; font-size: 0.9em;">Encontre sua apliação pela Iniciais do nome e Data de realização da avaliação; adicione outras aplicações para comparação</span>
+    </header>
+
+    <div class="control-panel">
+        <div class="input-group">
+            <label>Selecione uma Avaliação:</label>
+            <select id="patientSelect">
+                <option value="">Aguarde, carregando banco de dados...</option>
+            </select>
+        </div>
+        <button class="btn btn-add" onclick="addPatientToChart()">+ Adicionar ao Gráfico</button>
+        <button class="btn btn-clear" onclick="clearChart()">Limpar Tudo</button>
+    </div>
+
+    <!-- Legenda Dinâmica -->
+    <div id="selected-list"></div>
+
+    <!-- O Gráfico 3D -->
+    <div class="chart-container" id="container3d"></div>
+</div>
+
+<!-- FIREBASE SDK -->
+<script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
+    import { getFirestore, collection, getDocs } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
+
+    // --- IMPORTANTE: COLE SUAS CHAVES AQUI ---
+    const firebaseConfig = {
+        apiKey: "AIzaSyCcztFPDBnbnGbMZTG7rImLWxG8YQx4ZwE",
+  authDomain: "sf36-e9873.firebaseapp.com",
+  projectId: "sf36-e9873",
+  storageBucket: "sf36-e9873.firebasestorage.app",
+  messagingSenderId: "509487905740",
+  appId: "1:509487905740:web:60f6d7590c7ca29d0a7b69"
+    };
+
+    // Inicializar Firebase
+    let app, db;
+    try {
+        app = initializeApp(firebaseConfig);
+        db = getFirestore(app);
+    } catch (e) {
+        console.error("Erro Firebase:", e);
+        alert("Erro ao conectar no Firebase. Verifique se colou as chaves corretamente no código.");
+    }
+
+    // Variáveis Globais
+    let allData = []; 
+    let selectedSeries = []; 
+    let chart3D; 
+
+    // 1. Inicializar Gráfico Vazio
+    function initChart() {
+        chart3D = Highcharts.chart('container3d', {
+            chart: {
+                type: 'column',
+                options3d: {
+                    enabled: true,
+                    alpha: 10,
+                    beta: 25,
+                    depth: 70,
+                    viewDistance: 25
+                }
+            },
+            title: { text: 'Comparativo de Domínios de Saúde (SF-36)' },
+            subtitle: { text: 'Adicione pacientes para visualizar' },
+            xAxis: {
+                categories: [
+                    'Capacidade Funcional', 'Aspectos Físicos', 'Dor', 
+                    'Estado Geral', 'Vitalidade', 'Aspectos Sociais', 
+                    'Aspectos Emocionais', 'Saúde Mental'
+                ],
+                labels: { skew3d: true, style: { fontSize: '12px' } }
+            },
+            yAxis: {
+                min: 0,
+                max: 100,
+                title: { text: 'Score (0-100)' }
+            },
+            zAxis: {
+                min: 0,
+                max: 3,
+                visible: false, // &lt;--- ISSO REMOVE OS NÚMEROS 0, 1, 2 DO FUNDO
+                labels: {
+                    enabled: false // Garante que os números sumam
+                }
+            },
+            plotOptions: {
+                column: {
+                    depth: 30, // Largura da barra em 3D
+                    grouping: false, // Um atrás do outro
+                    groupZPadding: 15, // Espaço entre as fileiras
+                    pointPadding: 0.1,
+                    borderWidth: 0
+                }
+            },
+            series: [] 
+        });
+    }
+
+    // 2. Carregar Dados (Correção: Ordenação via JS para evitar erro de índice)
+    async function loadData() {
+        const select = document.getElementById('patientSelect');
+        
+        try {
+            // Busca simples (sem orderBy para evitar erros de permissão/índice)
+            const snapshot = await getDocs(collection(db, 'pacientes_sf36'));
+            
+            if (snapshot.empty) {
+                select.innerHTML = '<option value="">Nenhum paciente encontrado no banco.</option>';
+                return;
+            }
+
+            allData = [];
+            snapshot.forEach(doc => {
+                allData.push({ id: doc.id, ...doc.data() });
+            });
+
+            // Ordenar via JavaScript (Mais recente primeiro)
+            allData.sort((a, b) => {
+                const dateA = new Date(a.data_aplicacao);
+                const dateB = new Date(b.data_aplicacao);
+                return dateB - dateA;
+            });
+
+            // Preencher Dropdown
+            select.innerHTML = '<option value="">-- Escolha um paciente para adicionar --</option>';
+            
+            allData.forEach(patient => {
+                // Formatação segura de data
+                let dataApp = patient.data_aplicacao || "Data N/A";
+                if (dataApp.includes('-')) dataApp = dataApp.split('-').reverse().join('/');
+                
+                const nome = patient.paciente?.iniciais || "Sem Iniciais";
+                const cidade = patient.paciente?.cidade || "Sem Cidade";
+                
+                const opt = document.createElement('option');
+                opt.value = patient.id;
+                opt.textContent = `${nome} - ${dataApp} (${cidade})`;
+                select.appendChild(opt);
+            });
+
+        } catch (e) {
+            console.error("Erro ao carregar:", e);
+            select.innerHTML = '<option value="">Erro ao carregar (Verifique Console)</option>';
+            alert("Erro ao baixar dados: " + e.message);
+        }
+    }
+
+    // 3. Adicionar Paciente ao Gráfico
+    window.addPatientToChart = function() {
+        const select = document.getElementById('patientSelect');
+        const id = select.value;
+        if(!id) {
+            alert("Selecione um paciente na lista primeiro.");
+            return;
+        }
+
+        // Verifica duplicidade
+        if(selectedSeries.find(s => s.id === id)) {
+            alert("Este paciente já está no gráfico.");
+            return;
+        }
+
+        const patient = allData.find(p => p.id === id);
+        if(!patient || !patient.fase2_dominios) {
+            alert("Erro: Este paciente não possui dados de domínios calculados.");
+            return;
+        }
+
+        // Dados
+        const dominios = patient.fase2_dominios;
+        const dataArray = [
+            dominios.capacidade_funcional || 0,
+            dominios.aspectos_fisicos || 0,
+            dominios.dor || 0,
+            dominios.estado_geral || dominios.estado_geral_saude || 0,
+            dominios.vitalidade || 0,
+            dominios.aspectos_sociais || 0,
+            dominios.aspectos_emocionais || 0,
+            dominios.saude_mental || 0
+        ];
+
+        // Cores vibrantes
+        const colors = ['#20c997', '#0056b3', '#fd7e14', '#6f42c1', '#e83e8c', '#ffc107'];
+        const color = colors[selectedSeries.length % colors.length];
+
+        // Formata data para legenda
+        let dataLegenda = patient.data_aplicacao || "";
+        if(dataLegenda.includes('-')) dataLegenda = dataLegenda.split('-').reverse().join('/');
+
+        const newSeries = {
+            id: id,
+            name: `${patient.paciente.iniciais} (${dataLegenda})`,
+            data: dataArray,
+            color: color,
+            stack: selectedSeries.length // Profundidade Z
+        };
+
+        chart3D.addSeries(newSeries);
+        selectedSeries.push(newSeries);
+        updateTags();
+    };
+
+    // 4. Limpar
+    window.clearChart = function() {
+        // Remove todas as séries
+        while(chart3D.series.length > 0) {
+            chart3D.series[0].remove(true);
+        }
+        selectedSeries = [];
+        updateTags();
+    };
+
+    function updateTags() {
+        const container = document.getElementById('selected-list');
+        container.innerHTML = '';
+        selectedSeries.forEach(s => {
+            container.innerHTML += `
+                <div class="tag">
+                    <span class="tag-color" style="background:${s.color}"></span>
+                    ${s.name}
+                </div>
+            `;
+        });
+    }
+
+    // Iniciar
+    document.addEventListener('DOMContentLoaded', () => {
+        initChart();
+        loadData();
+    });
+</script>
+
+</body>
+</html>

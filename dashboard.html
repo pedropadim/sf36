@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Médico - SF-36</title>
+    <!-- Chart.js para Gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root { --primary: #0056b3; --bg: #f4f7f6; --white: #ffffff; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg); margin: 0; padding: 20px; color: #333; }
+        
+        .container { max-width: 1100px; margin: 0 auto; }
+        
+        /* Header */
+        header { background: var(--white); padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+        h1 { margin: 0; color: var(--primary); font-size: 1.5em; }
+        
+        /* Seletor */
+        .control-panel { background: var(--white); padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        label { font-weight: bold; display: block; margin-bottom: 8px; }
+        select { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 5px; font-size: 1em; background-color: #fff; cursor: pointer; }
+        
+        /* Área de Resultados */
+        #results-area { display: none; /* Começa oculto */ }
+        
+        /* Cartão de Info do Paciente */
+        .patient-card { background: var(--white); padding: 20px; border-radius: 8px; margin-bottom: 20px; border-left: 5px solid var(--primary); box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; }
+        .info-item small { color: #666; display: block; margin-bottom: 4px; font-size: 0.9em; }
+        .info-item strong { font-size: 1.1em; color: #333; }
+
+        /* Destaque para o IMC */
+        .imc-highlight { color: var(--primary); font-weight: 800; }
+
+        /* Container do Gráfico */
+        .chart-box { background: var(--white); padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: relative; height: 500px; width: 100%; }
+        
+        .loading { text-align: center; padding: 40px; color: #666; font-style: italic; }
+
+        /* Estilos da Análise */
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .analysis-card {
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 5px solid #ccc;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            font-size: 0.9em;
+        }
+
+        .analysis-card h4 { margin: 0 0 5px 0; color: #333; font-size: 1em; }
+        .analysis-card p { margin: 0; color: #666; line-height: 1.4; }
+        .analysis-card .badge { 
+            display: inline-block; 
+            padding: 2px 8px; 
+            border-radius: 12px; 
+            font-size: 0.8em; 
+            font-weight: bold; 
+            margin-bottom: 8px;
+        }
+
+        /* Cores baseadas no resultado */
+        .status-positive { border-left-color: #28a745; } /* Verde - Bom */
+        .status-positive .badge { background: #d4edda; color: #155724; }
+
+        .status-neutral { border-left-color: #17a2b8; } /* Azul - Médio */
+        .status-neutral .badge { background: #d1ecf1; color: #0c5460; }
+
+        .status-negative { border-left-color: #dc3545; } /* Vermelho - Ruim */
+        .status-negative .badge { background: #f8d7da; color: #721c24; }
+
+    /* --- NOVO CSS DO MENU SUPERIOR --- */
+    .app-header {
+        background-color: #ffffff;
+        padding: 10px 40px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        margin-bottom: 20px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .logo-area { display: flex; align-items: center; gap: 12px; }
+    .logo-img { height: 40px; width: auto; }
+    .app-name { font-size: 1.4rem; font-weight: 700; color: #0056b3; margin: 0; }
+
+    .nav-menu { list-style: none; display: flex; gap: 30px; margin: 0; padding: 0; }
+    .nav-menu a { text-decoration: none; color: #666; font-weight: 600; transition: 0.3s; position: relative; }
+    .nav-menu a:hover, .nav-menu a.active { color: #0056b3; }
+    
+    /* Linha animada abaixo do link */
+    .nav-menu a::after {
+        content: ''; position: absolute; width: 0; height: 2px; bottom: -5px; left: 0;
+        background-color: #0056b3; transition: width 0.3s;
+    }
+    .nav-menu a:hover::after, .nav-menu a.active::after { width: 100%; }
+        /* --- NOVO CSS DO MENU SUPERIOR --- */
+    .app-header {
+        background-color: #ffffff;
+        padding: 10px 40px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        margin-bottom: 20px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .logo-area { display: flex; align-items: center; gap: 12px; }
+    .logo-img { height: 40px; width: auto; }
+    .app-name { font-size: 1.4rem; font-weight: 700; color: #0056b3; margin: 0; }
+
+    .nav-menu { list-style: none; display: flex; gap: 30px; margin: 0; padding: 0; }
+    .nav-menu a { text-decoration: none; color: #666; font-weight: 600; transition: 0.3s; position: relative; }
+    .nav-menu a:hover, .nav-menu a.active { color: #0056b3; }
+    
+    /* Linha animada abaixo do link */
+    .nav-menu a::after {
+        content: ''; position: absolute; width: 0; height: 2px; bottom: -5px; left: 0;
+        background-color: #0056b3; transition: width 0.3s;
+    }
+    .nav-menu a:hover::after, .nav-menu a.active::after { width: 100%; }</style>
+</head>
+<body>
+<!-- MENU SUPERIOR -->
+<nav class="app-header">
+    <div class="logo-area">
+        <!-- Ícone de exemplo (substitua pelo seu logo se tiver) -->
+        <img src="https://cdn-icons-png.flaticon.com/512/2966/2966334.png" alt="Logo" class="logo-img">
+        <h2 class="app-name">SF-36 Analytics</h2>
+    </div>
+
+    <ul class="nav-menu">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="dashboard.html" class="active">Relatório</a></li>
+        <li><a href="comparativo.html">Comparação</a></li>
+    </ul>
+</nav>
+<div class="container">
+    <header>
+        <h1>Análise dos Resultados - Questionário SF-36</h1>
+        <span>Questionário para Viver Bem</span>
+    </header>
+
+    <div class="control-panel">
+        <label for="patientSelect">Procure suas iniciais e a data que o questionário foi aplicado:</label>
+        <select id="patientSelect">
+            <option value="">Carregando lista de pacientes...</option>
+        </select>
+    </div>
+
+    <div id="loading-msg" class="loading">Conectando ao banco de dados...</div>
+
+    <div id="results-area">
+        
+        <div class="patient-card">
+            <div class="info-grid">
+                <div class="info-item">
+                    <small>Iniciais</small>
+                    <strong id="res-iniciais">-</strong>
+                </div>
+                <div class="info-item">
+                    <small>Idade</small>
+                    <strong id="res-idade">-</strong>
+                </div>
+                <div class="info-item">
+                    <small>Gênero</small>
+                    <strong id="res-genero">-</strong>
+                </div>
+                
+                <div class="info-item">
+                    <small>Peso</small>
+                    <strong id="res-peso">-</strong>
+                </div>
+                <div class="info-item">
+                    <small>Altura</small>
+                    <strong id="res-altura">-</strong>
+                </div>
+                
+                <div class="info-item">
+                    <small>IMC (Cálculo)</small>
+                    <strong id="res-imc" class="imc-highlight">-</strong>
+                </div>
+
+                <div class="info-item">
+                    <small>Cidade</small>
+                    <strong id="res-cidade">-</strong>
+                </div>
+                <div class="info-item">
+                    <small>Data da Avaliação</small>
+                    <strong id="res-data">-</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="chart-box">
+            <canvas id="sf36Chart"></canvas>
+        </div>
+        
+        <!-- Área da Análise Comparativa -->
+        <h3 style="margin-top: 30px; color: var(--primary);">Análise Comparativa Detalhada</h3>
+        <div id="analysis-container" class="analysis-grid">
+            <!-- Os cards serão gerados aqui via JavaScript -->
+        </div>
+
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
+    import { getFirestore, collection, getDocs, query, orderBy } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyCcztFPDBnbnGbMZTG7rImLWxG8YQx4ZwE",
+        authDomain: "sf36-e9873.firebaseapp.com",
+        projectId: "sf36-e9873",
+        storageBucket: "sf36-e9873.firebasestorage.app",
+        messagingSenderId: "509487905740",
+        appId: "1:509487905740:web:60f6d7590c7ca29d0a7b69"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    let patientsData = []; 
+    let myChart = null;
+
+    // --- DADOS DE REFERÊNCIA ---
+    const sf36Normas = [
+        { gender: 'Male', age_min: 15, age_max: 19, values: { pf: 92.93, rp: 90.79, bp: 82.76, gh: 80.75, vt: 59.11, sf: 87.91, re: 89.62, mh: 78.51 } },
+        { gender: 'Female', age_min: 15, age_max: 19, values: { pf: 93.30, rp: 88.23, bp: 79.34, gh: 77.74, vt: 52.95, sf: 84.81, re: 81.71, mh: 74.23 } },
+        { gender: 'Male', age_min: 20, age_max: 29, values: { pf: 95.90, rp: 88.31, bp: 80.88, gh: 81.31, vt: 61.34, sf: 89.49, re: 88.21, mh: 79.08 } },
+        { gender: 'Female', age_min: 20, age_max: 29, values: { pf: 94.40, rp: 87.93, bp: 81.03, gh: 79.93, vt: 58.27, sf: 88.93, re: 87.55, mh: 78.75 } },
+        { gender: 'Male', age_min: 30, age_max: 39, values: { pf: 92.47, rp: 82.83, bp: 77.28, gh: 79.82, vt: 58.36, sf: 87.29, re: 86.98, mh: 79.00 } },
+        { gender: 'Female', age_min: 30, age_max: 39, values: { pf: 94.64, rp: 87.86, bp: 80.01, gh: 80.57, vt: 62.78, sf: 89.70, re: 90.32, mh: 80.31 } },
+        { gender: 'Male', age_min: 40, age_max: 49, values: { pf: 91.74, rp: 84.23, bp: 76.58, gh: 79.11, vt: 64.29, sf: 88.41, re: 90.36, mh: 81.12 } },
+        { gender: 'Female', age_min: 40, age_max: 49, values: { pf: 89.93, rp: 80.99, bp: 72.38, gh: 77.23, vt: 59.76, sf: 87.03, re: 87.67, mh: 80.20 } },
+        { gender: 'Male', age_min: 50, age_max: 59, values: { pf: 87.04, rp: 79.30, bp: 73.53, gh: 74.22, vt: 65.25, sf: 88.42, re: 86.76, mh: 82.87 } },
+        { gender: 'Female', age_min: 50, age_max: 59, values: { pf: 82.38, rp: 71.11, bp: 66.36, gh: 70.81, vt: 58.30, sf: 83.06, re: 84.33, mh: 80.44 } },
+        { gender: 'Male', age_min: 60, age_max: 69, values: { pf: 84.69, rp: 75.18, bp: 69.94, gh: 72.51, vt: 61.77, sf: 85.74, re: 85.55, mh: 81.65 } },
+        { gender: 'Female', age_min: 60, age_max: 69, values: { pf: 83.10, rp: 70.66, bp: 70.63, gh: 71.33, vt: 66.77, sf: 88.09, re: 86.02, mh: 83.63 } },
+        { gender: 'Male', age_min: 70, age_max: 79, values: { pf: 79.26, rp: 66.57, bp: 67.89, gh: 69.32, vt: 63.32, sf: 86.50, re: 81.76, mh: 82.03 } },
+        { gender: 'Female', age_min: 70, age_max: 79, values: { pf: 74.18, rp: 57.79, bp: 70.52, gh: 65.74, vt: 61.90, sf: 82.50, re: 74.27, mh: 82.75 } },
+        { gender: 'Male', age_min: 80, age_max: 150, values: { pf: 68.45, rp: 51.87, bp: 66.00, gh: 64.47, vt: 59.16, sf: 79.69, re: 66.87, mh: 80.55 } },
+        { gender: 'Female', age_min: 80, age_max: 150, values: { pf: 60.16, rp: 34.54, bp: 65.39, gh: 59.80, vt: 55.68, sf: 75.84, re: 55.40, mh: 79.68 } }
+    ];
+
+    function getReferenceValues(genderStr, age) {
+        if (!genderStr || !age) return null;
+        const genderKey = genderStr.toLowerCase().startsWith('m') ? 'Male' : 'Female';
+        const ageVal = parseInt(age);
+        const ref = sf36Normas.find(r => r.gender === genderKey && ageVal >= r.age_min && ageVal <= r.age_max);
+        return ref ? ref.values : null;
+    }
+
+    async function loadPatients() {
+        const select = document.getElementById('patientSelect');
+        const loadingMsg = document.getElementById('loading-msg');
+
+        try {
+            let querySnapshot;
+            try {
+                const q = query(collection(db, 'pacientes_sf36'), orderBy('data_aplicacao', 'desc'));
+                querySnapshot = await getDocs(q);
+            } catch (err) {
+                console.warn("Tentando busca sem ordenação...", err);
+                const q = collection(db, 'pacientes_sf36');
+                querySnapshot = await getDocs(q);
+            }
+            
+            select.innerHTML = '<option value="">-- Selecione para visualizar --</option>';
+            patientsData = []; 
+
+            if (querySnapshot.empty) {
+                select.innerHTML = '<option value="">Nenhum registro encontrado</option>';
+                loadingMsg.textContent = "Nenhum paciente cadastrado.";
+                return;
+            }
+
+            querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                patientsData.push({ id: doc.id, ...data });
+                const dataFormatada = data.data_aplicacao ? data.data_aplicacao.split('-').reverse().join('/') : 'Data n/a';
+                const iniciais = data.paciente?.iniciais || 'Sem nome';
+                const option = document.createElement('option');
+                option.value = doc.id;
+                option.textContent = `${iniciais} - ${dataFormatada}`;
+                select.appendChild(option);
+            });
+
+            loadingMsg.style.display = 'none'; 
+
+        } catch (error) {
+            console.error("Erro:", error);
+            loadingMsg.textContent = "Erro ao carregar dados.";
+        }
+    }
+
+    function onPatientSelect(event) {
+        const selectedId = event.target.value;
+        const resultsArea = document.getElementById('results-area');
+
+        if (!selectedId) {
+            resultsArea.style.display = 'none';
+            return;
+        }
+
+        const patient = patientsData.find(p => p.id === selectedId);
+        if (patient) {
+            updatePatientInfo(patient);
+            updateChart(patient);
+            resultsArea.style.display = 'block'; 
+        }
+    }
+
+    function updatePatientInfo(data) {
+        const p = data.paciente || {};
+        document.getElementById('res-iniciais').textContent = p.iniciais || '-';
+        document.getElementById('res-idade').textContent = p.idade ? `${p.idade} anos` : '-';
+        document.getElementById('res-genero').textContent = p.genero || '-';
+        document.getElementById('res-cidade').textContent = p.cidade || '-';
+        
+        let appDate = data.data_aplicacao;
+        if(appDate && appDate.includes('-')) appDate = appDate.split('-').reverse().join('/');
+        document.getElementById('res-data').textContent = appDate || '-';
+
+        document.getElementById('res-peso').textContent = p.peso ? `${p.peso} kg` : '-';
+        document.getElementById('res-altura').textContent = p.altura ? `${p.altura} cm` : '-';
+
+        const pesoVal = parseFloat(p.peso);
+        const alturaCm = parseFloat(p.altura);
+        const imcElement = document.getElementById('res-imc');
+
+        if (pesoVal > 0 && alturaCm > 0) {
+            const alturaMetros = alturaCm / 100;
+            const imc = pesoVal / (alturaMetros * alturaMetros);
+            let classificacao = '';
+            if (imc < 18.5) classificacao = '(Abaixo)';
+            else if (imc < 24.9) classificacao = '(Normal)';
+            else if (imc < 29.9) classificacao = '(Sobrepeso)';
+            else classificacao = '(Obesidade)';
+            imcElement.textContent = `${imc.toFixed(2)} ${classificacao}`;
+        } else {
+            imcElement.textContent = '-';
+        }
+    }
+
+    // --- FUNÇÃO DE ANÁLISE CORRIGIDA ---
+    function generateAnalysis(patientValues, refValues) {
+        const container = document.getElementById('analysis-container');
+        container.innerHTML = ''; 
+
+        if (!refValues) {
+            container.innerHTML = '<p>Não há dados normativos para esta faixa etária/gênero.</p>';
+            return;
+        }
+
+        const labels = {
+            pf: 'Capacidade Funcional',
+            rp: 'Aspectos Físicos',
+            bp: 'Dor',
+            gh: 'Estado Geral',
+            vt: 'Vitalidade',
+            sf: 'Aspectos Sociais',
+            re: 'Aspectos Emocionais',
+            mh: 'Saúde Mental'
+        };
+
+        const keys = ['pf', 'rp', 'bp', 'gh', 'vt', 'sf', 're', 'mh'];
+
+        keys.forEach((key, index) => {
+            const pScore = patientValues[index];
+            const rScore = refValues[key];
+            const diff = pScore - rScore;
+            
+            let statusClass = '';
+            let statusText = '';
+            let msg = '';
+
+            // Lógica de Classificação
+            if (diff < -10) {
+                statusClass = 'status-negative'; // Corrigido para bater com CSS
+                statusText = 'Abaixo da Média';
+                msg = `O paciente apresenta pontuação <strong>${Math.abs(diff).toFixed(1)} pontos inferior</strong> ao esperado. Pode indicar comprometimento neste domínio.`;
+            } else if (diff > 10) {
+                statusClass = 'status-positive'; // Corrigido para bater com CSS
+                statusText = 'Acima da Média';
+                msg = `Excelente resultado. O paciente está <strong>${diff.toFixed(1)} pontos acima</strong> da média populacional.`;
+            } else {
+                statusClass = 'status-neutral'; // Corrigido para bater com CSS
+                statusText = 'Dentro da Média';
+                msg = `Resultado compatível com a população de referência (Diferença de ${diff.toFixed(1)}).`;
+            }
+
+            const card = document.createElement('div');
+            card.className = `analysis-card ${statusClass}`;
+            card.innerHTML = `
+                <h4>${labels[key]}</h4>
+                <span class="badge">${statusText}</span>
+                <p>${msg}</p>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function updateChart(data) {
+        const ctx = document.getElementById('sf36Chart').getContext('2d');
+        const dominios = data.fase2_dominios;
+        const p = data.paciente || {};
+
+        if (!dominios) {
+            alert("Dados do gráfico incompletos.");
+            return;
+        }
+
+        if (myChart) myChart.destroy();
+
+        const patientValues = [
+            dominios.capacidade_funcional || 0,
+            dominios.aspectos_fisicos || 0,
+            dominios.dor || 0,
+            dominios.estado_geral || dominios.estado_geral_saude || 0,
+            dominios.vitalidade || 0,
+            dominios.aspectos_sociais || 0,
+            dominios.aspectos_emocionais || 0,
+            dominios.saude_mental || 0
+        ];
+
+        const refValues = getReferenceValues(p.genero, p.idade);
+        
+        // --- CHAMADA DA ANÁLISE AQUI ---
+        generateAnalysis(patientValues, refValues);
+        // -------------------------------
+
+        let referenceLineData = [];
+        if (refValues) {
+            referenceLineData = [
+                refValues.pf, refValues.rp, refValues.bp, refValues.gh, 
+                refValues.vt, refValues.sf, refValues.re, refValues.mh
+            ];
+        }
+
+        const labels = ['Capacidade Funcional', 'Aspectos Físicos', 'Dor', 'Estado Geral', 'Vitalidade', 'Aspectos Sociais', 'Aspectos Emocionais', 'Saúde Mental'];
+        const backgroundColors = [
+            'rgba(54, 162, 235, 0.6)', 'rgba(54, 162, 235, 0.6)',
+            'rgba(255, 99, 132, 0.6)', 'rgba(75, 192, 192, 0.6)', 
+            'rgba(255, 206, 86, 0.6)', 'rgba(153, 102, 255, 0.6)', 
+            'rgba(255, 159, 64, 0.6)', 'rgba(75, 192, 192, 0.6)'  
+        ];
+
+        const datasets = [{
+            type: 'bar',
+            label: 'Paciente',
+            data: patientValues,
+            backgroundColor: backgroundColors,
+            borderColor: backgroundColors.map(c => c.replace('0.6', '1')),
+            borderWidth: 1,
+            order: 2
+        }];
+
+        if (refValues) {
+            datasets.push({
+                type: 'line',
+                label: `Média Esperada (${p.genero}, ${p.idade} anos)`,
+                data: referenceLineData,
+                borderColor: '#333333',
+                borderWidth: 2,
+                borderDash: [5, 5],
+                pointBackgroundColor: '#fff',
+                pointBorderColor: '#333',
+                pointRadius: 4,
+                fill: false,
+                tension: 0.1,
+                order: 1
+            });
+        }
+
+        myChart = new Chart(ctx, {
+            data: { labels: labels, datasets: datasets },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: 'Score (0-100)' } } },
+                plugins: { 
+                    legend: { display: true, position: 'top' },
+                    tooltip: {
+                        callbacks: {
+                            afterBody: function(context) {
+                                if (refValues && context[0].dataset.type === 'bar') {
+                                    const val = context[0].raw;
+                                    const ref = referenceLineData[context[0].dataIndex];
+                                    const diff = (val - ref).toFixed(1);
+                                    const status = diff > 0 ? 'Acima da média' : 'Abaixo da média';
+                                    return `Diferença: ${diff > 0 ? '+' : ''}${diff} (${status})`;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        loadPatients();
+        document.getElementById('patientSelect').addEventListener('change', onPatientSelect);
+    });
+</script>
+
+</body>
+</html>

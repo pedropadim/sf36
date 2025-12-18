@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sobre o Autor - SF-36 Analytics</title>
+    <!-- Ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0056b3;    /* Azul Principal */
+            --secondary: #004494;  /* Azul Escuro */
+            --teal: #20c997;       /* Verde/Teal */
+            --teal-dark: #1aa179;
+            --accent: #e7f1ff;
+            --text: #333;
+            --light-gray: #f8f9fa;
+            --white: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9fbfd;
+            color: var(--text);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* --- MENU SUPERIOR (Igual à Landing Page) --- */
+        .app-header {
+            background-color: #ffffff;
+            padding: 10px 40px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo-area { display: flex; align-items: center; gap: 12px; }
+        .logo-img { height: 40px; width: auto; }
+        .app-name { font-size: 1.4rem; font-weight: 700; color: #0056b3; margin: 0; }
+
+        .nav-menu { list-style: none; display: flex; gap: 30px; margin: 0; padding: 0; }
+        .nav-menu a { text-decoration: none; color: #666; font-weight: 600; transition: 0.3s; position: relative; }
+        .nav-menu a:hover, .nav-menu a.active { color: #0056b3; }
+        
+        .nav-menu a::after {
+            content: ''; position: absolute; width: 0; height: 2px; bottom: -5px; left: 0;
+            background-color: #0056b3; transition: width 0.3s;
+        }
+        .nav-menu a:hover::after, .nav-menu a.active::after { width: 100%; }
+
+        /* --- PERFIL HERO --- */
+        .profile-hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: var(--white);
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .profile-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+                /* Substitua o bloco .profile-avatar antigo por este: */
+                .profile-avatar {
+            width: 150px;
+            height: 150px;
+            background-color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* font-size removido pois não é mais ícone */
+            color: var(--primary);
+            margin-bottom: 20px;
+            border: 4px solid rgba(255,255,255,0.3);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            
+            /* NOVAS PROPRIEDADES IMPORTANTES: */
+            overflow: hidden; /* Garante o corte redondo */
+            padding: 0;       /* Remove espaçamento interno */
+        }
+
+        /* ADICIONE este novo bloco logo abaixo do anterior: */
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Faz a imagem preencher sem distorcer */
+            display: block;
+        }
+
+        .profile-name { font-size: 2.5rem; font-weight: 700; margin-bottom: 5px; }
+        .profile-role { font-size: 1.2rem; opacity: 0.9; font-weight: 300; margin-bottom: 20px; }
+
+        /* --- CITAÇÃO (QUOTE) --- */
+        .quote-section {
+            background-color: var(--white);
+            max-width: 800px;
+            margin: -30px auto 50px; /* Sobe um pouco sobre o hero */
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            position: relative;
+            text-align: center;
+            border-left: 5px solid var(--teal);
+        }
+
+        .quote-icon {
+            font-size: 2rem;
+            color: var(--teal);
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .quote-text {
+            font-size: 1.25rem;
+            font-style: italic;
+            color: #555;
+            line-height: 1.8;
+        }
+
+        /* --- GRID DE EXPERIÊNCIAS --- */
+        .content-section {
+            max-width: 1100px;
+            margin: 0 auto 60px;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 40px;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .section-title::after {
+            content: ''; display: block; width: 60px; height: 3px;
+            background: var(--teal); margin: 10px auto 0;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .info-card {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid #eee;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            transition: transform 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+            border-top: 4px solid var(--primary);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .card-icon {
+            font-size: 1.8rem;
+            color: var(--primary);
+            background: var(--accent);
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+        }
+
+        .card-heading { font-size: 1.2rem; font-weight: bold; color: var(--secondary); }
+
+        .info-list { list-style: none; }
+        .info-list li {
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+            color: #555;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .info-list li i { 
+            color: var(--teal); 
+            margin-top: 5px; 
+            font-size: 0.8rem; 
+        }
+
+        .highlight { font-weight: 600; color: var(--primary); display: block; margin-bottom: 2px; }
+
+        /* Rodapé */
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #999;
+            font-size: 0.85rem;
+            border-top: 1px solid #eee;
+            margin-top: auto;
+            background: var(--white);
+        }
+
+        /* Responsividade */
+        @media (max-width: 900px) {
+            .info-grid { grid-template-columns: 1fr; }
+            .profile-name { font-size: 2rem; }
+            .quote-section { margin: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- MENU SUPERIOR -->
+<nav class="app-header">
+    <div class="logo-area">
+        <img src="https://cdn-icons-png.flaticon.com/512/2966/2966334.png" alt="Logo" class="logo-img">
+        <h2 class="app-name">SF-36 Analytics</h2>
+    </div>
+
+    <ul class="nav-menu">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="dashboard.html">Relatório</a></li>
+        <li><a href="comparativo.html">Comparação</a></li>
+        <li><a href="autor.html" class="active">Autor</a></li>
+    </ul>
+</nav>
+
+<!-- HERO PERFIL -->
+<section class="profile-hero">
+    <div class="profile-container">
+        <div class="profile-avatar">
+            <img src="pedro-selfie.jpeg" alt="Dr. Pedro Antonio Padim">
+        </div>
+        <h1 class="profile-name">Dr. Pedro Antonio Padim</h1>
+        <p class="profile-role">Médico | Residente em Neurocirurgia | CRM-SP 180.679</p>
+    </div>
+</section>
+
+<!-- CITAÇÃO DESTAQUE -->
+<section class="quote-section">
+    <i class="fas fa-quote-left quote-icon"></i>
+    <p class="quote-text">
+        "A era da medicina baseada em evidências atingiu seu potencial máximo no século XX, 
+        trazendo fundação sólida para compreensão da causalidade dentro das questões hipercomplexas da Medicina. Ainda assim, a 
+        idiossincrasia não deixou de ser a marca fundamental desta ciência. No século XXI, 
+        a busca pelo entendimento do processo de saúde-doença deve transcender a elucidação de mecanismos fisiopatológicos
+        para alcançar a natureza intrínseca e o significado verdadeiro de 'bem-estar'. Nesta jornada,  
+        a experiência e a percepcão do indivíduo são o único caminho possível. Ferramentas como o SF-36 não são apenas métricas; 
+        são a tradução da qualidade de vida em dados que guiam decisões clínicas mais humanas e precisas."
+    </p>
+</section>
+
+<!-- GRID DE INFORMAÇÕES -->
+<section class="content-section">
+    <h2 class="section-title">Trajetória Profissional</h2>
+    
+    <div class="info-grid">
+        
+        <!-- 1. Formação Acadêmica -->
+        <div class="info-card">
+            <div class="card-header">
+                <div class="card-icon"><i class="fas fa-graduation-cap"></i></div>
+                <div class="card-heading">Formação Acadêmica</div>
+            </div>
+            <ul class="info-list">
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <div>
+                        <span class="highlight">Residência em Neurocirurgia</span>
+                        Santa Casa de Misericórdia de Ribeirão Preto (2021-2025)
+                    </div>
+                </li>
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <div>
+                        <span class="highlight">Graduação em Medicina</span>
+                        FMRP - Universidade de São Paulo (USP)
+                    </div>
+                </li>
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <div>
+                        <span class="highlight">Intercâmbio Acadêmico</span>
+                        University of Toronto - St. Michael’s College (Canadá)
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <!-- 2. Experiência Internacional -->
+        <div class="info-card">
+            <div class="card-header">
+                <div class="card-icon"><i class="fas fa-globe-americas"></i></div>
+                <div class="card-heading">Experiência Global</div>
+            </div>
+            <ul class="info-list">
+                <li>
+                    <i class="fas fa-plane-departure"></i>
+                    <div>
+                        <span class="highlight">Sick Kids’ Hospital (Toronto)</span>
+                        Estágio em Neurocirurgia Pediátrica (2024)
+                    </div>
+                </li>
+                <li>
+                    <i class="fas fa-plane-departure"></i>
+                    <div>
+                        <span class="highlight">St. Michael’s Hospital (Toronto)</span>
+                        Research Fellowship em Cirurgia do Trauma
+                    </div>
+                </li>
+                <li>
+                    <i class="fas fa-plane-departure"></i>
+                    <div>
+                        <span class="highlight">University of Toronto</span>
+                        Academic English & Arts & Sciences (2013-2014)
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <!-- 3. Experiência Clínica -->
+        <div class="info-card">
+            <div class="card-header">
+                <div class="card-icon"><i class="fas fa-hospital-user"></i></div>
+                <div class="card-heading">Atuação Clínica</div>
+            </div>
+            <ul class="info-list">
+                <li>
+                    <i class="fas fa-briefcase-medical"></i>
+                    <div>
+                        <span class="highlight">Neurocirurgia</span>
+                        Hospital Amaral Carvalho (Jaú-SP)
+
+                    </div>
+                </li>
+                <li>
+                    <i class="fas fa-briefcase-medical"></i>
+                    <div>
+                        <span class="highlight">Atuação em UTI e Emergência</span>
+                        Hospitais Santa Lydia (Ribeirão Preto)
+                    </div>
+                </li>
+                <li>
+                    <i class="fas fa-briefcase-medical"></i>
+                    <div>
+                        <span class="highlight">Serviço Militar (FAB)</span>
+                        2º Tenente Médico Academia da Força Aérea (Pirassununga-SP)
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+</section>
+
+<footer>
+    &copy; 2025 SF-36 Analytics. by Pedro Padim.
+</footer>
+
+</body>
+</html>

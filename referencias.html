@@ -16,7 +16,7 @@
             --white: #ffffff;
             --bg-gradient: linear-gradient(135deg, #f9fbfd 0%, #eef2f5 100%);
             --border-color: #e9ecef;
-            --highlight-border: #20c997; /* Verde Teal para destaque de dados */
+            --highlight-border: #20c997;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -43,6 +43,7 @@
             top: 0;
             z-index: 1000;
             border-bottom: 1px solid #eee;
+            transition: all 0.3s ease;
         }
 
         .logo-area { display: flex; align-items: center; gap: 12px; }
@@ -50,11 +51,11 @@
         .app-name { font-size: 1.4rem; font-weight: 700; color: var(--primary); margin: 0; }
 
         .nav-menu { list-style: none; display: flex; gap: 30px; margin: 0; padding: 0; }
-        .nav-menu a { text-decoration: none; color: var(--text-light); font-weight: 600; transition: 0.3s; position: relative; }
+        .nav-menu a { text-decoration: none; color: var(--text-light); font-weight: 600; transition: 0.3s; position: relative; padding: 5px 0; }
         .nav-menu a:hover, .nav-menu a.active { color: var(--primary); }
         
         .nav-menu a::after {
-            content: ''; position: absolute; width: 0; height: 2px; bottom: -5px; left: 0;
+            content: ''; position: absolute; width: 0; height: 2px; bottom: 0; left: 0;
             background-color: var(--primary); transition: width 0.3s;
         }
         .nav-menu a:hover::after, .nav-menu a.active::after { width: 100%; }
@@ -103,12 +104,14 @@
             align-items: center;
             justify-content: center;
             font-size: 1.5rem;
+            flex-shrink: 0; /* Impede o ícone de amassar */
         }
 
         .section-title {
             font-size: 1.6rem;
             color: var(--primary);
             margin: 0;
+            line-height: 1.2;
         }
 
         /* Texto Justificado */
@@ -165,7 +168,7 @@
         
         .ref-item {
             position: relative;
-            padding-left: 45px; /* Espaço para o ícone/número */
+            padding-left: 45px;
             margin-bottom: 20px;
             font-size: 0.95rem;
             color: #555;
@@ -178,7 +181,6 @@
 
         .ref-item:last-child { border-bottom: none; }
 
-        /* Número estilizado */
         .ref-number {
             position: absolute;
             left: 0;
@@ -198,7 +200,6 @@
         .ref-title { font-weight: 700; color: #333; display: block; margin-bottom: 4px; }
         .ref-journal { font-style: italic; color: var(--primary); }
 
-        /* Footer */
         footer {
             text-align: center;
             padding: 20px;
@@ -208,10 +209,61 @@
             background-color: var(--white);
         }
 
+        /* --- RESPONSIVIDADE (MOBILE) --- */
         @media (max-width: 768px) {
-            .app-header { padding: 10px 20px; }
-            .nav-menu { display: none; }
-            .content-card { padding: 25px; }
+            /* 1. Ajuste do Cabeçalho: Coluna em vez de Linha */
+            .app-header { 
+                padding: 15px 20px; 
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .logo-area {
+                width: 100%;
+                justify-content: center;
+            }
+
+            /* 2. Menu Mobile: Botões em vez de Links simples */
+            .nav-menu { 
+                display: flex; /* Traz o menu de volta */
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+                width: 100%;
+            }
+
+            .nav-menu a {
+                font-size: 0.85rem;
+                padding: 8px 16px;
+                background-color: #f8f9fa;
+                border-radius: 20px; /* Formato de pílula */
+                border: 1px solid #eee;
+            }
+
+            .nav-menu a.active {
+                background-color: var(--primary);
+                color: white;
+                border-color: var(--primary);
+            }
+
+            .nav-menu a::after { display: none; } /* Remove sublinhado no mobile */
+
+            /* 3. Ajustes de Conteúdo */
+            .main-content { padding: 20px 15px; }
+            .content-card { padding: 20px; }
+            
+            .card-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .icon-box {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+
             .section-title { font-size: 1.3rem; }
         }
     </style>

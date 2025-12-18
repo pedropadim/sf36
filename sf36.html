@@ -32,36 +32,65 @@
         
         /* Loading spinner */
         .loading { opacity: 0.7; pointer-events: none; }
-        
-        /* --- CSS DO MENU SUPERIOR --- */
-        .app-header {
-            background-color: #ffffff;
-            padding: 10px 40px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #eee;
-        }
+            /* --- NOVO CSS DO MENU SUPERIOR --- */
+    .app-header {
+        background-color: #ffffff;
+        padding: 10px 40px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        margin-bottom: 20px;
+        border-bottom: 1px solid #eee;
+    }
 
-        .logo-area { display: flex; align-items: center; gap: 12px; }
-        .logo-img { height: 40px; width: auto; }
-        .app-name { font-size: 1.4rem; font-weight: 700; color: #0056b3; margin: 0; }
+    .logo-area { display: flex; align-items: center; gap: 12px; }
+    .logo-img { height: 40px; width: auto; }
+    .app-name { font-size: 1.4rem; font-weight: 700; color: #0056b3; margin: 0; }
 
-        .nav-menu { list-style: none; display: flex; gap: 30px; margin: 0; padding: 0; }
-        .nav-menu a { text-decoration: none; color: #666; font-weight: 600; transition: 0.3s; position: relative; }
-        .nav-menu a:hover, .nav-menu a.active { color: #0056b3; }
-        
-        /* Linha animada abaixo do link */
-        .nav-menu a::after {
-            content: ''; position: absolute; width: 0; height: 2px; bottom: -5px; left: 0;
-            background-color: #0056b3; transition: width 0.3s;
-        }
-        .nav-menu a:hover::after, .nav-menu a.active::after { width: 100%; }
+    .nav-menu { list-style: none; display: flex; gap: 30px; margin: 0; padding: 0; }
+    .nav-menu a { text-decoration: none; color: #666; font-weight: 600; transition: 0.3s; position: relative; }
+    .nav-menu a:hover, .nav-menu a.active { color: #0056b3; }
+    
+    /* Linha animada abaixo do link */
+    .nav-menu a::after {
+        content: ''; position: absolute; width: 0; height: 2px; bottom: -5px; left: 0;
+        background-color: #0056b3; transition: width 0.3s;
+    }
+    .nav-menu a:hover::after, .nav-menu a.active::after { width: 100%; }
+    /* --- NOVO CSS DO MENU SUPERIOR --- */
+    .app-header {
+        background-color: #ffffff;
+        padding: 10px 40px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        margin-bottom: 20px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .logo-area { display: flex; align-items: center; gap: 12px; }
+    .logo-img { height: 40px; width: auto; }
+    .app-name { font-size: 1.4rem; font-weight: 700; color: #0056b3; margin: 0; }
+
+    .nav-menu { list-style: none; display: flex; gap: 30px; margin: 0; padding: 0; }
+    .nav-menu a { text-decoration: none; color: #666; font-weight: 600; transition: 0.3s; position: relative; }
+    .nav-menu a:hover, .nav-menu a.active { color: #0056b3; }
+    
+    /* Linha animada abaixo do link */
+    .nav-menu a::after {
+        content: ''; position: absolute; width: 0; height: 2px; bottom: -5px; left: 0;
+        background-color: #0056b3; transition: width 0.3s;
+    }
+    .nav-menu a:hover::after, .nav-menu a.active::after { width: 100%; }
+    /* ... existing code ... */
 
         /* --- RESPONSIVIDADE (MOBILE) --- */
         @media (max-width: 768px) {
@@ -96,6 +125,9 @@
             }
         }
     </style>
+</head>
+
+</style>
 </head>
 <body>
 <!-- MENU SUPERIOR -->
@@ -614,10 +646,10 @@
         if (isNaN(valor)) return 0;
 
         // Q1: 1=100, 2=75, 3=50, 4=25, 5=0
-        if (q === 1) return {1:100, 2:75, 3:50, 4:25, 5=0}[valor] || 0;
+        if (q === 1) return {1:100, 2:75, 3:50, 4:25, 5:0}[valor] || 0;
 
         // Q2: 1=100, 2=75, 3=50, 4=25, 5=0 (Melhor = 100)
-        if (q === 2) return {1:100, 2:75, 3:50, 4:25, 5=0}[valor] || 0;
+        if (q === 2) return {1:100, 2:75, 3:50, 4:25, 5:0}[valor] || 0;
 
         // Q3-Q12: 1=0, 2=50, 3=100 (Sim, dificulta muito = 0)
         if (q >= 3 && q <= 12) return {1:0, 2:50, 3:100}[valor] || 0;
@@ -626,13 +658,13 @@
         if (q >= 13 && q <= 19) return {1:0, 2:100}[valor] || 0;
 
         // Q20: 1=100, 2=75, 3=50, 4=25, 5=0 (De forma nenhuma = 100)
-        if (q === 20) return {1:100, 2:75, 3:50, 4:25, 5=0}[valor] || 0;
+        if (q === 20) return {1:100, 2:75, 3:50, 4:25, 5:0}[valor] || 0;
 
         // Q21: 1=100, 2=80, 3=60, 4=40, 5=20, 6=0 (Nenhuma dor = 100)
         if (q === 21) return {1:100, 2:80, 3:60, 4:40, 5:20, 6:0}[valor] || 0;
 
         // Q22: 1=100, 2=75, 3=50, 4=25, 5=0 (De maneira alguma = 100)
-        if (q === 22) return {1:100, 2:75, 3:50, 4:25, 5=0}[valor] || 0;
+        if (q === 22) return {1:100, 2:75, 3:50, 4:25, 5:0}[valor] || 0;
 
         // Q23, 26, 27, 30 (Positivas): 1=100, 2=80, 3=60, 4=40, 5=20, 6=0
         if ([23, 26, 27, 30].includes(q)) return {1:100, 2:80, 3:60, 4:40, 5:20, 6:0}[valor] || 0;
@@ -647,7 +679,7 @@
         if ([33, 35].includes(q)) return {1:0, 2:25, 3:50, 4:75, 5:100}[valor] || 0;
 
         // Q34, 36 (Verdadeiro = Bom): 1=100, 2=75, 3=50, 4=25, 5=0
-        if ([34, 36].includes(q)) return {1:100, 2:75, 3:50, 4:25, 5=0}[valor] || 0;
+        if ([34, 36].includes(q)) return {1:100, 2:75, 3:50, 4:25, 5:0}[valor] || 0;
 
         return 0;
     }

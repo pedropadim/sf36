@@ -12,7 +12,6 @@
             --secondary: #004494;  /* Azul Escuro */
             --teal: #20c997;       /* Verde para Comparativo */
             --teal-dark: #1aa179;
-            /* Novas Cores para os novos cards */
             --purple: #6f42c1;     /* Referências */
             --orange: #fd7e14;     /* Autor */
             --cyan: #17a2b8;       /* Contato */
@@ -33,18 +32,46 @@
             min-height: 100vh;
         }
 
-        /* Barra de Navegação */
-        nav {
-            background: var(--white);
-            padding: 20px 5%;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        /* --- CSS DO MENU SUPERIOR (CORRIGIDO) --- */
+        .app-header {
+            background-color: #ffffff;
+            padding: 10px 40px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid #eee;
         }
 
-        .logo {
-            font-size: 1.5rem;
+        .logo-area { display: flex; align-items: center; gap: 12px; }
+        .logo-img { height: 40px; width: auto; }
+        .app-name { font-size: 1.4rem; font-weight: 700; color: #0056b3; margin: 0; }
+
+        .nav-menu { list-style: none; display: flex; gap: 30px; margin: 0; padding: 0; }
+        .nav-menu a { text-decoration: none; color: #666; font-weight: 600; transition: 0.3s; position: relative; font-size: 1rem; }
+        .nav-menu a:hover, .nav-menu a.active { color: #0056b3; }
+        
+        .nav-menu a::after {
+            content: ''; position: absolute; width: 0; height: 2px; bottom: -5px; left: 0;
+            background-color: #0056b3; transition: width 0.3s;
+        }
+        .nav-menu a:hover::after, .nav-menu a.active::after { width: 100%; }
+
+        /* Barra de Navegação Secundária */
+        .secondary-nav {
+            background: var(--white);
+            padding: 15px 5%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .logo-secondary {
+            font-size: 1.1rem;
             font-weight: bold;
             color: var(--primary);
             display: flex;
@@ -58,7 +85,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 60px 20px;
+            padding: 40px 20px; /* Reduzi um pouco o padding vertical */
             text-align: center;
             background: linear-gradient(135deg, #f9fbfd 0%, #eef2f5 100%);
         }
@@ -77,7 +104,7 @@
         p.description {
             font-size: 1.1rem;
             color: #666;
-            margin-bottom: 50px;
+            margin-bottom: 40px;
             max-width: 700px;
             margin-left: auto;
             margin-right: auto;
@@ -111,116 +138,87 @@
             box-shadow: 0 15px 30px rgba(0,0,0,0.1);
         }
 
-        /* 1. Cartão Paciente */
-        .card-patient {
-            background-color: rgb(47, 127, 255);
-            color: var(--white);
-            border: none;
-        }
+        /* Cores dos Cards */
+        .card-patient { background-color: rgb(47, 127, 255); color: var(--white); border: none; }
         .card-patient:hover { background-color: var(--secondary); }
+        .card-patient .card-text { color: rgba(255,255,255,0.9); }
 
-        /* 2. Cartão Médico */
-        .card-doctor {
-            border-top: 4px solid var(--primary);
-        }
+        .card-doctor { border-top: 4px solid var(--primary); }
         .card-doctor i { color: var(--primary); }
 
-        /* 3. Cartão Comparativo */
-        .card-compare {
-            border-top: 4px solid var(--teal);
-        }
+        .card-compare { border-top: 4px solid var(--teal); }
         .card-compare i { color: var(--teal); }
         .card-compare:hover { border-color: var(--teal-dark); }
 
-        /* --- NOVOS ESTILOS ADICIONADOS --- */
-        
-        /* 4. Cartão Referências */
-        .card-ref {
-            border-top: 4px solid var(--purple);
-        }
+        .card-ref { border-top: 4px solid var(--purple); }
         .card-ref i { color: var(--purple); }
         
-        /* 5. Cartão Autor */
-        .card-author {
-            border-top: 4px solid var(--orange);
-        }
+        .card-author { border-top: 4px solid var(--orange); }
         .card-author i { color: var(--orange); }
 
-        /* 6. Cartão Contato */
-        .card-contact {
-            border-top: 4px solid var(--cyan);
-        }
+        .card-contact { border-top: 4px solid var(--cyan); }
         .card-contact i { color: var(--cyan); }
-        /* -------------------------------- */
 
-        .icon-large {
-            font-size: 3rem;
-            margin-bottom: 20px;
-        }
-
-        .card-title {
-            font-size: 1.3rem;
-            font-weight: bold;
-            margin-bottom: 12px;
-        }
-
-        .card-text {
-            font-size: 0.95rem;
-            opacity: 0.9;
-            color: #555;
-        }
+        .icon-large { font-size: 3rem; margin-bottom: 20px; }
+        .card-title { font-size: 1.3rem; font-weight: bold; margin-bottom: 12px; }
+        .card-text { font-size: 0.95rem; opacity: 0.9; color: #555; }
         
-        .card-patient .card-text { color: rgba(255,255,255,0.9); }
-
         footer {
             text-align: center;
             padding: 20px;
             color: #999;
             font-size: 0.85rem;
             border-top: 1px solid #eee;
+            margin-top: auto;
         }
 
+        /* --- MEDIA QUERIES PARA MOBILE (CORRIGIDO) --- */
         @media (max-width: 900px) {
             .action-grid {
-                grid-template-columns: 1fr;
-                max-width: 400px;
-                margin-left: auto;
-                margin-right: auto;
+                grid-template-columns: repeat(2, 1fr); /* Tablet: 2 colunas */
             }
-            h1 { font-size: 2rem; }
         }
 
-    /* CSS DO MENU SUPERIOR */
-    .app-header {
-        background-color: #ffffff;
-        padding: 10px 40px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-        margin-bottom: 20px;
-        border-bottom: 1px solid #eee;
-    }
+        @media (max-width: 768px) {
+            /* Ajuste do Cabeçalho Principal */
+            .app-header {
+                flex-direction: column; /* Empilha logo e menu */
+                padding: 15px 20px;     /* Reduz padding lateral */
+                gap: 15px;
+            }
 
-    .logo-area { display: flex; align-items: center; gap: 12px; }
-    .logo-img { height: 40px; width: auto; }
-    .app-name { font-size: 1.4rem; font-weight: 700; color: #0056b3; margin: 0; }
+            .logo-area {
+                width: 100%;
+                justify-content: center; /* Centraliza logo */
+            }
 
-    .nav-menu { list-style: none; display: flex; gap: 30px; margin: 0; padding: 0; }
-    .nav-menu a { text-decoration: none; color: #666; font-weight: 600; transition: 0.3s; position: relative; }
-    .nav-menu a:hover, .nav-menu a.active { color: #0056b3; }
-    
-    .nav-menu a::after {
-        content: ''; position: absolute; width: 0; height: 2px; bottom: -5px; left: 0;
-        background-color: #0056b3; transition: width 0.3s;
-    }
-    .nav-menu a:hover::after, .nav-menu a.active::after { width: 100%; }
+            .nav-menu {
+                width: 100%;
+                justify-content: center; /* Centraliza menu */
+                gap: 20px;
+                font-size: 0.9rem;
+            }
+
+            /* Oculta a barra secundária no mobile para economizar espaço */
+            .secondary-nav {
+                display: none;
+            }
+
+            /* Ajuste do Grid para Celular */
+            .action-grid {
+                grid-template-columns: 1fr; /* 1 coluna */
+                max-width: 100%; /* Remove limite de largura */
+                padding: 0 10px;
+            }
+
+            h1 { font-size: 1.8rem; }
+            
+            .hero { padding: 30px 15px; }
+        }
     </style>
 </head>
 <body>
+
 <!-- MENU SUPERIOR -->
 <nav class="app-header">
     <div class="logo-area">
@@ -235,73 +233,73 @@
     </ul>
 </nav>
     
-    <!-- Nota: Você tinha um segundo <nav> aqui. Mantive caso queira usar, mas o menu superior acima já cumpre a função -->
-    <nav>
-        <div class="logo">
-            <i class="fas fa-heartbeat"></i>
-            <span>Uma ferramenta gratuita para sua saúde</span>
+<!-- MENU SECUNDÁRIO (Oculto no mobile via CSS) -->
+<nav class="secondary-nav">
+    <div class="logo-secondary">
+        <i class="fas fa-heartbeat"></i>
+        <span>Uma ferramenta gratuita para sua saúde</span>
+    </div>
+</nav>
+
+<section class="hero">
+    <div class="hero-content">
+        <h1>Avaliação de Qualidade de Vida</h1>
+        <p class="description">
+            Ferramenta validada internacionalmente para análise de saúde física e mental.
+            Selecione a opção desejada abaixo.
+        </p>
+
+        <div class="action-grid">
+            
+            <!-- 1. PACIENTE -->
+            <a href="sf36.html" class="card card-patient">
+                <i class="fas fa-user-injured icon-large"></i>
+                <div class="card-title">Quero Aplicar</div>
+                <div class="card-text">Clique aqui para responder ao questionário de avaliação.</div>
+            </a>
+
+            <!-- 2. MÉDICO: Dashboard -->
+            <a href="dashboard.html" class="card card-doctor">
+                <i class="fas fa-chart-bar icon-large"></i>
+                <div class="card-title">Resultados Individuais</div>
+                <div class="card-text">Visualize o perfil de saúde detalhado de um paciente específico.</div>
+            </a>
+
+            <!-- 3. MÉDICO: Comparativo -->
+            <a href="comparativo.html" class="card card-compare">
+                <i class="fas fa-chart-line icon-large"></i>
+                <div class="card-title">Avaliação Comparativa</div>
+                <div class="card-text">Compare avaliações realizadas ao longo do tempo.</div>
+            </a>
+
+            <!-- 4. REFERÊNCIAS -->
+            <a href="referencias.html" class="card card-ref">
+                <i class="fas fa-book-medical icon-large"></i>
+                <div class="card-title">Referências</div>
+                <div class="card-text">Base científica e validação do questionário SF-36.</div>
+            </a>
+
+            <!-- 5. AUTOR -->
+            <a href="autor.html" class="card card-author">
+                <i class="fas fa-user-tie icon-large"></i>
+                <div class="card-title">Autor do Projeto</div>
+                <div class="card-text">Conheça o desenvolvedor e a proposta do sistema.</div>
+            </a>
+
+            <!-- 6. CONTATO -->
+            <a href="contato.html" class="card card-contact">
+                <i class="fas fa-envelope-open-text icon-large"></i>
+                <div class="card-title">Contato</div>
+                <div class="card-text">Fale conosco para dúvidas, suporte ou sugestões.</div>
+            </a>
+
         </div>
-    </nav>
+    </div>
+</section>
 
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Avaliação de Qualidade de Vida</h1>
-            <p class="description">
-                Ferramenta validada internacionalmente para análise de saúde física e mental.
-                Selecione a opção desejada abaixo.
-            </p>
-
-            <div class="action-grid">
-                
-                <!-- 1. PACIENTE -->
-                <a href="sf36.html" class="card card-patient">
-                    <i class="fas fa-user-injured icon-large"></i>
-                    <div class="card-title">Quero Aplicar</div>
-                    <div class="card-text">Clique aqui para responder ao questionário de avaliação.</div>
-                </a>
-
-                <!-- 2. MÉDICO: Dashboard -->
-                <a href="dashboard.html" class="card card-doctor">
-                    <i class="fas fa-chart-bar icon-large"></i>
-                    <div class="card-title">Resultados Individuais</div>
-                    <div class="card-text">Visualize o perfil de saúde detalhado de um paciente específico.</div>
-                </a>
-
-                <!-- 3. MÉDICO: Comparativo -->
-                <a href="comparativo.html" class="card card-compare">
-                    <i class="fas fa-chart-line icon-large"></i>
-                    <div class="card-title">Avaliação Comparativa</div>
-                    <div class="card-text">Compare avaliações realizadas ao longo do tempo.</div>
-                </a>
-
-                <!-- 4. REFERÊNCIAS (NOVO) -->
-                <a href="referencias.html" class="card card-ref">
-                    <i class="fas fa-book-medical icon-large"></i>
-                    <div class="card-title">Referências</div>
-                    <div class="card-text">Base científica e validação do questionário SF-36.</div>
-                </a>
-
-                <!-- 5. AUTOR (NOVO) -->
-                <a href="autor.html" class="card card-author">
-                    <i class="fas fa-user-tie icon-large"></i>
-                    <div class="card-title">Autor do Projeto</div>
-                    <div class="card-text">Conheça o desenvolvedor e a proposta do sistema.</div>
-                </a>
-
-                <!-- 6. CONTATO (NOVO) -->
-                <a href="contato.html" class="card card-contact">
-                    <i class="fas fa-envelope-open-text icon-large"></i>
-                    <div class="card-title">Contato</div>
-                    <div class="card-text">Fale conosco para dúvidas, suporte ou sugestões.</div>
-                </a>
-
-            </div>
-        </div>
-    </section>
-
-    <footer>
-        &copy; 2025 SF-36 Analytics. by Pedro Padim.
-    </footer>
+<footer>
+    &copy; 2025 SF-36 Analytics. by Pedro Padim.
+</footer>
 
 </body>
 </html>

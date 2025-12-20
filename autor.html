@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sobre o Autor - SF-36 Analytics</title>
+    <title>Propósito & Autor - SF-36 Analytics</title>
     <!-- Ícones -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -14,6 +14,7 @@
             --teal-dark: #1aa179;
             --accent: #e7f1ff;
             --text: #333;
+            --text-light: #666;
             --light-gray: #f8f9fa;
             --white: #ffffff;
         }
@@ -22,7 +23,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f9fbfd;
+            background-color: #f4f7f6;
             color: var(--text);
             line-height: 1.6;
             display: flex;
@@ -30,11 +31,11 @@
             min-height: 100vh;
         }
 
-        /* --- MENU SUPERIOR (Igual à Landing Page) --- */
+        /* --- MENU SUPERIOR --- */
         .app-header {
             background-color: #ffffff;
             padding: 10px 40px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -44,172 +45,211 @@
         }
 
         .logo-area { display: flex; align-items: center; gap: 12px; }
-        .logo-img { height: 40px; width: auto; }
-        .app-name { font-size: 1.4rem; font-weight: 700; color: #0056b3; margin: 0; }
+        .logo-img { height: 35px; width: auto; }
+        .app-name { font-size: 1.3rem; font-weight: 700; color: #0056b3; margin: 0; }
 
         .nav-menu { list-style: none; display: flex; gap: 30px; margin: 0; padding: 0; }
-        .nav-menu a { text-decoration: none; color: #666; font-weight: 600; transition: 0.3s; position: relative; }
+        .nav-menu a { text-decoration: none; color: #666; font-weight: 600; font-size: 0.95rem; transition: 0.3s; position: relative; }
         .nav-menu a:hover, .nav-menu a.active { color: #0056b3; }
-        
         .nav-menu a::after {
             content: ''; position: absolute; width: 0; height: 2px; bottom: -5px; left: 0;
             background-color: #0056b3; transition: width 0.3s;
         }
         .nav-menu a:hover::after, .nav-menu a.active::after { width: 100%; }
 
-        /* --- PERFIL HERO --- */
-        .profile-hero {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: var(--white);
-            padding: 60px 20px;
+        /* --- SEÇÃO 1: PROPÓSITO DO PROJETO (DESTAQUE) --- */
+        .project-hero {
+            background: #fff;
+            padding: 60px 20px 40px;
             text-align: center;
+            border-bottom: 1px solid #eee;
         }
 
-        .profile-container {
-            max-width: 1000px;
+        .project-title {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .project-subtitle {
+            font-size: 1.2rem;
+            color: var(--teal-dark);
+            font-weight: 600;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* --- DIAGRAMA CONCEITUAL (3 PILARES) --- */
+        .diagram-container {
+            max-width: 1200px;
             margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            position: relative;
+            padding: 20px 0 60px;
         }
 
-        .profile-avatar {
-            width: 150px;
-            height: 150px;
-            background-color: var(--white);
+        /* Linha conectora atrás dos cards (desktop) */
+        .diagram-container::before {
+            content: '';
+            position: absolute;
+            top: 55px; /* Ajuste para alinhar com os ícones */
+            left: 15%;
+            right: 15%;
+            height: 2px;
+            background: repeating-linear-gradient(to right, var(--teal) 0, var(--teal) 10px, transparent 10px, transparent 20px);
+            z-index: 0;
+        }
+
+        .concept-card {
+            background: #fff;
+            border-radius: 15px;
+            padding: 30px 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            position: relative;
+            z-index: 1;
+            transition: transform 0.3s ease;
+            border-top: 4px solid transparent;
+        }
+
+        .concept-card:hover {
+            transform: translateY(-10px);
+            border-top-color: var(--primary);
+        }
+
+        .concept-icon-box {
+            width: 70px;
+            height: 70px;
+            background: var(--primary);
+            color: #fff;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 1.8rem;
+            margin: 0 auto 20px;
+            border: 4px solid #fff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .concept-card:nth-child(2) .concept-icon-box { background: var(--teal); }
+        .concept-card:nth-child(3) .concept-icon-box { background: var(--secondary); }
+
+        .concept-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 5px;
+        }
+
+        .concept-latin {
+            font-size: 0.9rem;
             color: var(--primary);
-            margin-bottom: 20px;
-            border: 4px solid rgba(255,255,255,0.3);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-            overflow: hidden;
-            padding: 0;
-        }
-
-        .profile-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        .profile-name { font-size: 2.5rem; font-weight: 700; margin-bottom: 5px; }
-        .profile-role { font-size: 1.2rem; opacity: 0.9; font-weight: 300; margin-bottom: 20px; }
-
-        /* --- CITAÇÃO (QUOTE) --- */
-        .quote-section {
-            background-color: var(--white);
-            max-width: 800px;
-            margin: -30px auto 50px;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            position: relative;
-            text-align: center;
-            border-left: 5px solid var(--teal);
-        }
-
-        .quote-icon {
-            font-size: 2rem;
-            color: var(--teal);
+            font-style: italic;
             margin-bottom: 15px;
             display: block;
         }
 
-        .quote-text {
-            font-size: 1.25rem;
-            font-style: italic;
-            color: #555;
-            line-height: 1.8;
+        .concept-text {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            line-height: 1.5;
         }
 
-        /* --- GRID DE EXPERIÊNCIAS --- */
-        .content-section {
-            max-width: 1100px;
-            margin: 0 auto 60px;
-            padding: 0 20px;
+        /* --- SEÇÃO DO AUTOR (SINGELO/ESTILIZADO) --- */
+        .author-section {
+            background-color: #f4f7f6;
+            padding: 60px 20px;
         }
 
-        .section-title {
-            text-align: center;
-            font-size: 1.8rem;
-            color: var(--primary);
+        .author-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Card do Perfil Compacto */
+        .author-compact {
+            display: flex;
+            align-items: center;
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.03);
+            border-left: 5px solid var(--secondary);
             margin-bottom: 40px;
-            position: relative;
-            display: inline-block;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-        
-        .section-title::after {
-            content: ''; display: block; width: 60px; height: 3px;
-            background: var(--teal); margin: 10px auto 0;
-        }
-
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
             gap: 30px;
         }
 
-        .info-card {
-            background: var(--white);
-            padding: 30px;
-            border-radius: 12px;
-            border: 1px solid #eee;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-            transition: transform 0.3s ease;
+        .author-photo {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--accent);
+            flex-shrink: 0;
         }
 
-        .info-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.08);
-            border-top: 4px solid var(--primary);
-        }
-
-        .card-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        .card-icon {
+        .author-info h3 {
             font-size: 1.8rem;
-            color: var(--primary);
-            background: var(--accent);
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 10px;
+            color: var(--secondary);
+            margin-bottom: 5px;
         }
 
-        .card-heading { font-size: 1.2rem; font-weight: bold; color: var(--secondary); }
+        .author-info p {
+            color: var(--text-light);
+            font-size: 1rem;
+        }
 
-        .info-list { list-style: none; }
-        .info-list li {
-            margin-bottom: 15px;
-            font-size: 0.95rem;
-            color: #555;
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
+        /* Quote dentro da seção do autor */
+        .quote-box {
+            position: relative;
+            padding: 20px 40px;
+            margin-bottom: 40px;
+            text-align: center;
         }
         
-        .info-list li i { 
-            color: var(--teal); 
-            margin-top: 5px; 
-            font-size: 0.8rem; 
+        .quote-box i { color: var(--teal); font-size: 1.5rem; margin-bottom: 10px; display: block; }
+        .quote-box p { font-style: italic; color: #555; font-size: 1.1rem; }
+
+        /* Grid de Trajetória (Simplificado) */
+        .trajectory-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
         }
 
-        .highlight { font-weight: 600; color: var(--primary); display: block; margin-bottom: 2px; }
+        .trajectory-item {
+            background: transparent;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            transition: 0.2s;
+        }
+
+        .trajectory-item:hover {
+            background: #fff;
+            border-color: var(--primary);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .traj-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .traj-list { list-style: none; font-size: 0.9rem; color: #666; }
+        .traj-list li { margin-bottom: 8px; padding-left: 15px; position: relative; }
+        .traj-list li::before {
+            content: '•'; color: var(--teal); position: absolute; left: 0; font-weight: bold;
+        }
 
         /* Rodapé */
         footer {
@@ -217,37 +257,21 @@
             padding: 20px;
             color: #999;
             font-size: 0.85rem;
+            background: #fff;
             border-top: 1px solid #eee;
             margin-top: auto;
-            background: var(--white);
         }
 
         /* Responsividade */
         @media (max-width: 900px) {
-            .info-grid { grid-template-columns: 1fr; }
-            .profile-name { font-size: 2rem; }
-            .quote-section { margin: 20px; }
-
-            /* --- CORREÇÃO DO CABEÇALHO PARA MOBILE (INÍCIO) --- */
-            .app-header {
-                flex-direction: column; /* Empilha logo e menu verticalmente */
-                padding: 15px 20px;     /* Ajusta o padding para telas menores */
-                gap: 15px;              /* Adiciona espaço entre o logo e o menu */
-                height: auto;           /* Permite que a altura se ajuste ao conteúdo */
-            }
-
-            .logo-area {
-                width: 100%;
-                justify-content: center; /* Centraliza o logo */
-            }
-
-            .nav-menu {
-                flex-wrap: wrap;         /* Permite que os links quebrem linha se faltar espaço */
-                justify-content: center; /* Centraliza os links */
-                gap: 15px;               /* Ajusta o espaçamento entre os links */
-                width: 100%;
-            }
-            /* --- CORREÇÃO DO CABEÇALHO PARA MOBILE (FIM) --- */
+            .diagram-container { grid-template-columns: 1fr; gap: 40px; }
+            .diagram-container::before { display: none; } /* Remove linha no mobile */
+            
+            .author-compact { flex-direction: column; text-align: center; }
+            .trajectory-grid { grid-template-columns: 1fr; }
+            
+            .app-header { flex-direction: column; gap: 15px; padding: 15px; }
+            .nav-menu { flex-wrap: wrap; justify-content: center; }
         }
     </style>
 </head>
@@ -259,145 +283,116 @@
         <img src="https://cdn-icons-png.flaticon.com/512/2966/2966334.png" alt="Logo" class="logo-img">
         <h2 class="app-name">SF-36 Analytics</h2>
     </div>
-
     <ul class="nav-menu">
         <li><a href="index.html">Home</a></li>
         <li><a href="dashboard.html">Relatório</a></li>
         <li><a href="comparativo.html">Comparação</a></li>
-        <li><a href="autor.html" class="active">Autor</a></li>
+        <li><a href="autor.html" class="active">Sobre</a></li>
     </ul>
 </nav>
 
-<!-- HERO PERFIL -->
-<section class="profile-hero">
-    <div class="profile-container">
-        <div class="profile-avatar">
-            <img src="pedro-selfie.jpeg" alt="Dr. Pedro Antonio Padim">
+<!-- SEÇÃO PRINCIPAL: PROPÓSITO DO PROJETO -->
+<section class="project-hero">
+    <h1 class="project-title">Propósito do Projeto</h1>
+    <p class="project-subtitle">Saúde Integral & Tecnologia</p>
+
+    <!-- DIAGRAMA VISUAL (3 PILARES) -->
+    <div class="diagram-container">
+        
+        <!-- Pilar 1: A Ideia -->
+        <div class="concept-card">
+            <div class="concept-icon-box">
+                <i class="fas fa-brain"></i>
+            </div>
+            <h3 class="concept-title">A Ideia</h3>
+            <span class="concept-latin">"Nosce te ipsum"</span>
+            <p class="concept-text">
+                Reconhecer os vários domínios da saúde física e mental é crucial. Entender quais problemas mais impactam a qualidade de vida é o primeiro passo para a cura.
+            </p>
         </div>
-        <h1 class="profile-name">Dr. Pedro Antonio Padim</h1>
-        <p class="profile-role">Médico | Residente em Neurocirurgia | CRM-SP 180.679</p>
+
+        <!-- Pilar 2: O Projeto -->
+        <div class="concept-card">
+            <div class="concept-icon-box">
+                <i class="fas fa-user-md"></i>
+            </div>
+            <h3 class="concept-title">O Projeto</h3>
+            <span class="concept-latin">Foco no Paciente</span>
+            <p class="concept-text">
+                A medicina de precisão valoriza a percepção do paciente. Dar voz a quem sente é fundamental. Nosso objetivo é trazer ferramentas que promovam o bem-estar integral.
+            </p>
+        </div>
+
+        <!-- Pilar 3: A Execução -->
+        <div class="concept-card">
+            <div class="concept-icon-box">
+                <i class="fas fa-microchip"></i>
+            </div>
+            <h3 class="concept-title">A Execução</h3>
+            <span class="concept-latin">Clínica + IA</span>
+            <p class="concept-text">
+                Unimos experiência clínica ao experimentalismo tecnológico. Na era da IA, canalizamos o potencial tremendo da tecnologia para reverter em qualidade de vida real.
+            </p>
+        </div>
+
     </div>
 </section>
 
-<!-- CITAÇÃO DESTAQUE -->
-<section class="quote-section">
-    <i class="fas fa-quote-left quote-icon"></i>
-    <p class="quote-text">
-        "A era da medicina baseada em evidências atingiu seu potencial máximo no século XX, 
-        trazendo fundação sólida para compreensão da causalidade dentro das questões hipercomplexas da Medicina. Ainda assim, a 
-        idiossincrasia não deixou de ser a marca fundamental desta ciência. No século XXI, 
-        a busca pelo entendimento do processo de saúde-doença deve transcender a elucidação de mecanismos fisiopatológicos
-        para alcançar a natureza intrínseca e o significado verdadeiro de 'bem-estar'. Nesta jornada,  
-        a experiência e a percepcão do indivíduo são o único caminho possível. Ferramentas como o SF-36 não são apenas métricas; 
-        são a tradução da qualidade de vida em dados que guiam decisões clínicas mais humanas e precisas."
-    </p>
-</section>
-
-<!-- GRID DE INFORMAÇÕES -->
-<section class="content-section">
-    <h2 class="section-title">Trajetória Profissional</h2>
-    
-    <div class="info-grid">
+<!-- SEÇÃO DO AUTOR (SINGELA E ESTILIZADA) -->
+<section class="author-section">
+    <div class="author-container">
         
-        <!-- 1. Formação Acadêmica -->
-        <div class="info-card">
-            <div class="card-header">
-                <div class="card-icon"><i class="fas fa-graduation-cap"></i></div>
-                <div class="card-heading">Formação Acadêmica</div>
-            </div>
-            <ul class="info-list">
-                <li>
-                    <i class="fas fa-check-circle"></i>
-                    <div>
-                        <span class="highlight">Residência em Neurocirurgia</span>
-                        Santa Casa de Misericórdia de Ribeirão Preto (2021-2025)
-                    </div>
-                </li>
-                <li>
-                    <i class="fas fa-check-circle"></i>
-                    <div>
-                        <span class="highlight">Graduação em Medicina</span>
-                        FMRP - Universidade de São Paulo (USP)
-                    </div>
-                </li>
-                <li>
-                    <i class="fas fa-check-circle"></i>
-                    <div>
-                        <span class="highlight">Intercâmbio Acadêmico</span>
-                        University of Toronto - St. Michael’s College (Canadá)
-                    </div>
-                </li>
-            </ul>
+        <!-- Citação de Transição -->
+        <div class="quote-box">
+            <i class="fas fa-quote-left"></i>
+            <p>"A busca pelo entendimento do processo de saúde-doença deve transcender a elucidação de mecanismos fisiopatológicos para alcançar a natureza intrínseca do 'bem-estar'."</p>
         </div>
 
-        <!-- 2. Experiência Internacional -->
-        <div class="info-card">
-            <div class="card-header">
-                <div class="card-icon"><i class="fas fa-globe-americas"></i></div>
-                <div class="card-heading">Experiência Global</div>
+        <!-- Perfil Compacto -->
+        <div class="author-compact">
+            <img src="pedro-selfie.jpeg" alt="Dr. Pedro Antonio Padim" class="author-photo">
+            <div class="author-info">
+                <h3>Dr. Pedro Antonio Padim</h3>
+                <p>Médico | Residente em Neurocirurgia | CRM-SP 180.679</p>
+                <p style="font-size: 0.9rem; margin-top: 5px; color: #888;">Idealizador do SF-36 Analytics</p>
             </div>
-            <ul class="info-list">
-                <li>
-                    <i class="fas fa-plane-departure"></i>
-                    <div>
-                        <span class="highlight">Sick Kids’ Hospital (Toronto)</span>
-                        Estágio em Neurocirurgia Pediátrica (2024)
-                    </div>
-                </li>
-                <li>
-                    <i class="fas fa-plane-departure"></i>
-                    <div>
-                        <span class="highlight">St. Michael’s Hospital (Toronto)</span>
-                        Research Fellowship em Cirurgia do Trauma
-                    </div>
-                </li>
-                <li>
-                    <i class="fas fa-plane-departure"></i>
-                    <div>
-                        <span class="highlight">University of Toronto</span>
-                        Academic English & Arts & Sciences (2013-2014)
-                    </div>
-                </li>
-            </ul>
         </div>
 
-        <!-- 3. Experiência Clínica -->
-        <div class="info-card">
-            <div class="card-header">
-                <div class="card-icon"><i class="fas fa-hospital-user"></i></div>
-                <div class="card-heading">Atuação Clínica</div>
+        <!-- Trajetória (Grid Discreto) -->
+        <div class="trajectory-grid">
+            <div class="trajectory-item">
+                <div class="traj-header"><i class="fas fa-graduation-cap"></i> Formação</div>
+                <ul class="traj-list">
+                    <li>Residência Neurocirurgia (Santa Casa Ribeirão)</li>
+                    <li>Medicina USP (FMRP)</li>
+                    <li>Intercâmbio Univ. of Toronto (Canadá)</li>
+                </ul>
             </div>
-            <ul class="info-list">
-                <li>
-                    <i class="fas fa-briefcase-medical"></i>
-                    <div>
-                        <span class="highlight">Neurocirurgia</span>
-                        Hospital Amaral Carvalho (Jaú-SP)
 
-                    </div>
-                </li>
-                <li>
-                    <i class="fas fa-briefcase-medical"></i>
-                    <div>
-                        <span class="highlight">Atuação em UTI e Emergência</span>
-                        Hospitais Santa Lydia (Ribeirão Preto)
-                    </div>
-                </li>
-                <li>
-                    <i class="fas fa-briefcase-medical"></i>
-                    <div>
-                        <span class="highlight">Serviço Militar (FAB)</span>
-                        2º Tenente Médico Academia da Força Aérea (Pirassununga-SP)
-                    </div>
-                </li>
-            </ul>
+            <div class="trajectory-item">
+                <div class="traj-header"><i class="fas fa-globe-americas"></i> Internacional</div>
+                <ul class="traj-list">
+                    <li>Sick Kids’ Hospital (Toronto)</li>
+                    <li>St. Michael’s Hospital (Fellowship)</li>
+                    <li>Academic English & Arts (UofT)</li>
+                </ul>
+            </div>
+
+            <div class="trajectory-item">
+                <div class="traj-header"><i class="fas fa-briefcase-medical"></i> Clínica</div>
+                <ul class="traj-list">
+                    <li>Hosp. Amaral Carvalho (Jaú)</li>
+                    <li>Hosp. Santa Lydia (UTI/Emergência)</li>
+                    <li>Tenente Médico FAB (AFA)</li>
+                </ul>
+            </div>
         </div>
 
     </div>
 </section>
 
 <footer>
-    &copy; 2025 SF-36 Analytics. by Pedro Padim.
+    &copy; 2025 SF-36 Analytics.
 </footer>
 
 </body>

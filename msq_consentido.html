@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <!-- Viewport essencial para responsividade mobile -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Avaliação de Qualidade do Sono - MSQ-BR</title>
+    <!-- Ícones Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            /* --- Variáveis do Cabeçalho (MSQ-BR) --- */
+            --primary: #0056b3;    /* Azul Principal */
+            --secondary: #004494;  /* Azul Escuro */
+            --teal: #20c997;
+            --purple: #6f42c1;
+            --orange: #fd7e14;
+            --text: #333;
+            --white: #ffffff;
+
+            /* --- Variáveis do Formulário de Sono --- */
+            --primary-color: #2C3E50;
+            --accent-color: #5D6D7E;
+            --highlight-color: #6C5CE7; /* Lavanda */
+            --bg-color: #F0F2F5;
+            --card-bg: #FFFFFF;
+            --border-color: #D1D9E6;
+            --success-bg: #D4EDDA;
+            --success-text: #155724;
+            --warning-bg: #FFF3CD;
+            --warning-text: #856404;
+            --danger-bg: #F8D7DA;
+            --danger-text: #721C24;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* --- ESTILOS DO CABEÇALHO (Copiados da Home) --- */
+        .app-header {
+            background-color: #ffffff;
+            padding: 10px 40px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid #eee;
+        }
+
+        .logo-area { display: flex; align-items: center; gap: 12px; }
+        .logo-icon { font-size: 1.8rem; color: var(--primary); }
+        .app-name { font-size: 1.4rem; font-weight: 700; color: #0056b3; margin: 0; }
+
+        .nav-menu { list-style: none; display: flex; gap: 30px; margin: 0; padding: 0; }
+        .nav-menu a { text-decoration: none; color: #666; font-weight: 600; transition: 0.3s; position: relative; font-size: 1rem; }
+        .nav-menu a:hover, .nav-menu a.active { color: #0056b3; }
+        
+        .nav-menu a::after {
+            content: ''; position: absolute; width: 0; height: 2px; bottom: -5px; left: 0;
+            background-color: #0056b3; transition: width 0.3s;
+        }
+        .nav-menu a:hover::after, .nav-menu a.active::after { width: 100%; }
+
+        .secondary-nav {
+            background: var(--white);
+            padding: 15px 5%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .logo-secondary {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* --- ESTILOS DO FORMULÁRIO --- */
+        .container {
+            max-width: 800px;
+            width: 95%; /* Responsivo */
+            margin: 20px auto 40px auto; /* Margem superior ajustada */
+            background-color: var(--card-bg);
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        header.form-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1.form-title {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+            color: var(--primary-color);
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            color: var(--accent-color);
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            color: var(--highlight-color);
+            font-weight: 700;
+            margin: 30px 0 15px 0;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #EEF2F7;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .id-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--accent-color);
+        }
+
+        input, select {
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: #FAFBFC;
+            transition: border-color 0.2s;
+            width: 100%;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--highlight-color);
+            background-color: #FFF;
+            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.1);
+        }
+
+        .question-block {
+            background-color: #FAFBFC;
+            border: 1px solid #EDF2F7;
+            border-radius: 12px;
+            padding: 20px 15px;
+            margin-bottom: 20px;
+        }
+
+        .question-text {
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            display: block;
+            color: var(--primary-color);
+        }
+
+        .radio-group {
+            display: flex;
+            justify-content: space-between;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .radio-option {
+            position: relative;
+            cursor: pointer;
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            min-width: 40px;
+        }
+
+        .radio-option input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+        .radio-circle {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: 2px solid var(--border-color);
+            background-color: #FFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--accent-color);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 1rem;
+        }
+
+        .radio-option input:checked + .radio-circle {
+            background-color: var(--highlight-color);
+            border-color: var(--highlight-color);
+            color: #FFF;
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(108, 92, 231, 0.3);
+        }
+
+        .scale-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 0.75rem;
+            color: var(--accent-color);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-top: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(44, 62, 80, 0.2);
+            transition: transform 0.1s, background-color 0.2s;
+        }
+
+        .submit-btn:active {
+            transform: scale(0.98);
+        }
+
+        #resultArea {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .result-good { background: var(--success-bg); color: var(--success-text); }
+        .result-mild { background: var(--warning-bg); color: var(--warning-text); }
+        .result-mod { background: #FFE0B2; color: #E65100; }
+        .result-severe { background: var(--danger-bg); color: var(--danger-text); }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #999;
+            font-size: 0.85rem;
+            border-top: 1px solid #eee;
+            margin-top: auto;
+            background-color: #fff;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- MEDIA QUERIES --- */
+        @media (max-width: 600px) {
+            .app-header {
+                flex-direction: column;
+                padding: 15px 20px;
+                gap: 15px;
+            }
+            .logo-area { width: 100%; justify-content: center; }
+            .nav-menu { width: 100%; justify-content: center; gap: 15px; font-size: 0.9rem; flex-wrap: wrap; }
+            .secondary-nav { display: none; }
+            .id-grid { grid-template-columns: 1fr; }
+            .container { padding: 20px 15px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- MENU SUPERIOR (Igual ao da Home) -->
+<nav class="app-header">
+    <div class="logo-area">
+        <i class="fas fa-notes-medical logo-icon"></i>
+        <h2 class="app-name">MSQ-BR</h2>
+    </div>
+
+    <ul class="nav-menu">
+        <li><a href="index.html">Questionários</a></li>
+        <!-- Classe 'active' movida para o item Sono -->
+        <li><a href="sono.html" class="active">Sono</a></li>
+        <li><a href="resultado.html">Resultados</a></li>
+        <li><a href="referencias-sono.html">Referências</a></li>
+    </ul>
+</nav>
+    
+<!-- MENU SECUNDÁRIO (Igual ao da Home) -->
+<nav class="secondary-nav">
+    <div class="logo-secondary">
+        <i class="fas fa-stethoscope"></i>
+        <span>Avaliação de Saúde do Sono</span>
+    </div>
+</nav>
+
+<!-- CONTEÚDO DO FORMULÁRIO -->
+<div class="container">
+    <header class="form-header">
+        <h1 class="form-title">Avaliação do Sono</h1>
+        <p class="subtitle">Responda com base na sua rotina recente.</p>
+    </header>
+
+    <form id="sleepForm">
+        
+        <!-- IDENTIFICAÇÃO -->
+        <div class="section-title">Sobre Você</div>
+        <div class="id-grid">
+            <div class="form-group">
+                <label for="birthdate">Data de Nascimento</label>
+                <input type="date" id="birthdate" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="iniciais">Iniciais</label>
+                <input type="text" id="iniciais" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="sex">Sexo</label>
+                <select id="sex" required>
+                    <option value="" disabled selected>Selecione</option>
+                    <option value="Masculino">Masculino</option>
+                    <option value="Feminino">Feminino</option>
+                    <option value="NaoBinario">Não-binário</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="profession">Profissão</label>
+                <input type="text" id="profession" placeholder="Sua ocupação" required>
+            </div>
+
+            <div class="form-group">
+                <label for="weight">Peso (kg)</label>
+                <input type="number" id="weight" step="0.1" placeholder="Ex: 70.5" inputmode="decimal" required>
+            </div>
+
+            <div class="form-group">
+                <label for="height">Altura (m)</label>
+                <input type="number" id="height" step="0.01" placeholder="Ex: 1.75" inputmode="decimal" required>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin: 30px 0 10px 0; font-size: 0.85rem; color: var(--accent-color); background: #E8EAF6; padding: 8px; border-radius: 6px;">
+            Escala: <strong>1</strong> (Nunca) a <strong>7</strong> (Sempre)
+        </div>
+
+        <!-- PERGUNTAS -->
+        <div class="section-title">Insônia</div>
+        <div id="insomnia-questions"></div>
+
+        <div class="section-title">Hipersonia</div>
+        <div id="hypersomnia-questions"></div>
+
+        <button type="submit" class="submit-btn">Calcular Resultado</button>
+    </form>
+
+    <div id="resultArea"></div>
+</div>
+
+<footer>
+    &copy; 2025 MSQ-BR. Todos os direitos reservados.
+</footer>
+
+<!-- FIREBASE SDK -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+
+    // --- CONFIGURAÇÃO FIREBASE ---
+    const firebaseConfig = {
+        apiKey: "AIzaSyDDA4tBza7xTYUQXpEuoBdOiOGzY1ACCvY",
+        authDomain: "msqbr-4c23b.firebaseapp.com",
+        projectId: "msqbr-4c23b",
+        storageBucket: "msqbr-4c23b.firebasestorage.app",
+        messagingSenderId: "198514532428",
+        appId: "1:198514532428:web:3d906718e924624b4014e9",
+        measurementId: "G-K7WW42MMK6"
+    };
+
+    let db;
+    try {
+        const app = initializeApp(firebaseConfig);
+        db = getFirestore(app);
+    } catch (e) {
+        console.warn("Firebase não configurado ou erro na inicialização.", e);
+    }
+
+    // --- DADOS DAS PERGUNTAS ---
+    const questions = [
+        { id: 'q1', text: '1. Dificuldade em adormecer à noite', domain: 'insomnia' },
+        { id: 'q2', text: '2. Acordar de madrugada sem conseguir voltar a dormir', domain: 'insomnia' },
+        { id: 'q3', text: '3. Ter um sono agitado', domain: 'insomnia' },
+        { id: 'q4', text: '4. Precisar de medicamentos para dormir', domain: 'insomnia' },
+        { id: 'q5', text: '5. Acordar se sentindo cansado', domain: 'hypersomnia' },
+        { id: 'q6', text: '6. Roncar durante o sono', domain: 'hypersomnia' },
+        { id: 'q7', text: '7. Sentir sonolência excessiva de dia', domain: 'hypersomnia' },
+        { id: 'q8', text: '8. Pegar no sono involuntariamente de dia', domain: 'hypersomnia' },
+        { id: 'q9', text: '9. Necessidade de tirar cochilos', domain: 'hypersomnia' },
+        { id: 'q10', text: '10. Acordar com dor de cabeça/mal-estar', domain: 'hypersomnia' }
+    ];
+
+    // --- RENDERIZAÇÃO ---
+    function renderQuestions() {
+        const insomniaContainer = document.getElementById('insomnia-questions');
+        const hyperContainer = document.getElementById('hypersomnia-questions');
+
+        questions.forEach(q => {
+            const html = `
+                <div class="question-block">
+                    <label class="question-text">${q.text}</label>
+                    <div class="radio-group">
+                        ${[1, 2, 3, 4, 5, 6, 7].map(val => `
+                            <label class="radio-option">
+                                <input type="radio" name="${q.id}" value="${val}" required>
+                                <div class="radio-circle">${val}</div>
+                            </label>
+                        `).join('')}
+                    </div>
+                    <div class="scale-labels">
+                        <span>Nunca</span>
+                        <span>Sempre</span>
+                    </div>
+                </div>
+            `;
+            
+            if (q.domain === 'insomnia') {
+                insomniaContainer.innerHTML += html;
+            } else {
+                hyperContainer.innerHTML += html;
+            }
+        });
+    }
+
+    renderQuestions();
+
+    // --- LÓGICA DE ENVIO ---
+    document.getElementById('sleepForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const btn = document.querySelector('.submit-btn');
+        const originalText = btn.textContent;
+        btn.textContent = "Processando...";
+        btn.disabled = true;
+
+        // Coleta de dados
+        const formData = {
+            identificacao: {
+                iniciais: document.getElementById('iniciais').value,
+                nascimento: document.getElementById('birthdate').value,
+                sexo: document.getElementById('sex').value,
+                profissao: document.getElementById('profession').value,
+                peso: parseFloat(document.getElementById('weight').value),
+                altura: parseFloat(document.getElementById('height').value)
+            },
+            respostas: {},
+            scoreTotal: 0,
+            resultado: "",
+            dataEnvio: serverTimestamp()
+        };
+
+        // Cálculo
+        let totalScore = 0;
+        questions.forEach(q => {
+            const selected = document.querySelector(`input[name="${q.id}"]:checked`);
+            if (selected) {
+                const val = parseInt(selected.value);
+                formData.respostas[q.id] = val;
+                totalScore += val;
+            }
+        });
+        formData.scoreTotal = totalScore;
+
+        // Classificação
+        let resultClass = "";
+        if (totalScore <= 24) {
+            formData.resultado = "Boa qualidade do sono";
+            resultClass = "result-good";
+        } else if (totalScore <= 27) {
+            formData.resultado = "Dificuldade leve";
+            resultClass = "result-mild";
+        } else if (totalScore <= 30) {
+            formData.resultado = "Dificuldade moderada";
+            resultClass = "result-mod";
+        } else {
+            formData.resultado = "Dificuldade severa";
+            resultClass = "result-severe";
+        }
+
+        // Envio e Exibição
+        try {
+            if (db) {
+                await addDoc(collection(db, "avaliacoes_sono"), formData);
+            }
+            
+            const resultDiv = document.getElementById('resultArea');
+            resultDiv.style.display = 'block';
+            resultDiv.className = resultClass;
+            resultDiv.innerHTML = `
+                <h2 style="margin-bottom:10px">Pontuação: ${totalScore}</h2>
+                <h3 style="margin-bottom:5px">${formData.resultado}</h3>
+                <p style="font-size:0.9rem">Obrigado! Seus dados foram salvos com sucesso.</p>
+            `;
+            
+            resultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        } catch (error) {
+            alert("Erro ao processar. Verifique sua conexão.");
+            console.error(error);
+        } finally {
+            btn.textContent = originalText;
+            btn.disabled = false;
+        }
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Painel de Resultados - Sono</title>
+    <!-- Ícones Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            /* --- Variáveis do Cabeçalho (MSQ-BR) --- */
+            --primary: #0056b3;
+            --secondary: #004494;
+            --teal: #20c997;
+            --purple: #6f42c1;
+            --orange: #fd7e14;
+            --text: #333;
+            --white: #ffffff;
+
+            /* --- Variáveis do Painel --- */
+            --primary-color: #2C3E50;
+            --accent-color: #5D6D7E;
+            --highlight-color: #6C5CE7;
+            --bg-color: #F0F2F5;
+            --card-bg: #FFFFFF;
+            --border-color: #D1D9E6;
+            
+            /* Cores de Status */
+            --success-bg: #D4EDDA; --success-text: #155724;
+            --warning-bg: #FFF3CD; --warning-text: #856404;
+            --danger-bg: #F8D7DA; --danger-text: #721C24;
+            --info-bg: #E8EAF6; --info-text: #303F9F;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            line-height: 1.5;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* --- CABEÇALHO --- */
+        .app-header {
+            background-color: #ffffff;
+            padding: 10px 40px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid #eee;
+        }
+
+        .logo-area { display: flex; align-items: center; gap: 12px; }
+        .logo-icon { font-size: 1.8rem; color: var(--primary); }
+        .app-name { font-size: 1.4rem; font-weight: 700; color: #0056b3; margin: 0; }
+
+        .nav-menu { list-style: none; display: flex; gap: 30px; margin: 0; padding: 0; }
+        .nav-menu a { text-decoration: none; color: #666; font-weight: 600; transition: 0.3s; position: relative; font-size: 1rem; }
+        .nav-menu a:hover, .nav-menu a.active { color: #0056b3; }
+        
+        .nav-menu a::after {
+            content: ''; position: absolute; width: 0; height: 2px; bottom: -5px; left: 0;
+            background-color: #0056b3; transition: width 0.3s;
+        }
+        .nav-menu a:hover::after, .nav-menu a.active::after { width: 100%; }
+
+        .secondary-nav {
+            background: var(--white);
+            padding: 15px 5%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .logo-secondary {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* --- PAINEL --- */
+        .container {
+            max-width: 900px;
+            width: 95%;
+            margin: 0 auto 40px auto;
+            background-color: var(--card-bg);
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            min-height: 85vh;
+        }
+
+        header.panel-header {
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        h1.panel-title { font-size: 1.5rem; margin-bottom: 5px; color: var(--primary-color); }
+        .subtitle { font-size: 0.9rem; color: var(--accent-color); }
+
+        /* --- DASHBOARD --- */
+        .control-panel {
+            background-color: #FAFBFC;
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .control-label {
+            display: block;
+            font-weight: 600;
+            color: var(--highlight-color);
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            background-color: #fff;
+            color: var(--primary-color);
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--highlight-color);
+            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.1);
+        }
+
+        .loading-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--accent-color);
+            font-style: italic;
+        }
+
+        #results-area { display: none; animation: fadeIn 0.5s ease; }
+
+        /* GRID DE INFORMAÇÕES (Atualizado) */
+        .patient-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+            background: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid var(--highlight-color);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .info-item small { display: block; color: var(--accent-color); font-size: 0.75rem; text-transform: uppercase; }
+        .info-item strong { display: block; font-size: 1rem; color: var(--primary-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        .score-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .score-card {
+            background: #FAFBFC;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .score-circle {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin: 15px 0;
+            color: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .score-circle.animate { transform: scale(1.1); }
+        .score-label { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-color); font-weight: 700; }
+        .score-subtext { font-size: 1.1rem; font-weight: 600; margin-top: 5px; }
+
+        .bg-good { background-color: #28a745; } .text-good { color: #28a745; }
+        .bg-mild { background-color: #ffc107; color: #856404; } .text-mild { color: #d39e00; }
+        .bg-mod { background-color: #fd7e14; } .text-mod { color: #fd7e14; }
+        .bg-severe { background-color: #dc3545; } .text-severe { color: #dc3545; }
+
+        .explanation-box {
+            background-color: var(--info-bg);
+            color: var(--info-text);
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+        }
+
+        .explanation-title { font-weight: 700; margin-bottom: 10px; display: block; text-transform: uppercase; font-size: 0.8rem; }
+        .detail-list { list-style: none; padding: 0; margin: 0; }
+        .detail-list li { margin-bottom: 8px; padding-left: 15px; position: relative; }
+        .detail-list li::before { content: "•"; color: var(--highlight-color); position: absolute; left: 0; font-weight: bold; }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #999;
+            font-size: 0.85rem;
+            border-top: 1px solid #eee;
+            margin-top: auto;
+            background-color: #fff;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 600px) {
+            .app-header { flex-direction: column; padding: 15px 20px; gap: 15px; }
+            .logo-area { width: 100%; justify-content: center; }
+            .nav-menu { width: 100%; justify-content: center; gap: 15px; font-size: 0.9rem; flex-wrap: wrap; }
+            .secondary-nav { display: none; }
+            .score-grid { grid-template-columns: 1fr; }
+            .container { padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- MENU SUPERIOR -->
+<nav class="app-header">
+    <div class="logo-area">
+        <i class="fas fa-notes-medical logo-icon"></i>
+        <h2 class="app-name">MSQ-BR</h2>
+    </div>
+
+    <ul class="nav-menu">
+        <li><a href="index.html">Questionários</a></li>
+        <li><a href="sono.html">Sono</a></li>
+        <li><a href="resultado.html" class="active">Resultados</a></li>
+        <li><a href="referencia-sono.html">Referências</a></li>
+    </ul>
+</nav>
+    
+<!-- MENU SECUNDÁRIO -->
+<nav class="secondary-nav">
+    <div class="logo-secondary">
+        <i class="fas fa-stethoscope"></i>
+        <span>Avaliação de Saúde do Sono</span>
+    </div>
+</nav>
+
+<!-- CONTEÚDO PRINCIPAL -->
+<div class="container">
+    <header class="panel-header">
+        <h1 class="panel-title">Painel de Avaliações</h1>
+        <p class="subtitle">Selecione uma avaliação para visualizar o relatório completo.</p>
+    </header>
+
+    <!-- SELETOR DE PACIENTE -->
+    <div class="control-panel">
+        <label for="patientSelect" class="control-label">Histórico de Avaliações:</label>
+        <select id="patientSelect">
+            <option value="">Carregando banco de dados...</option>
+        </select>
+    </div>
+
+    <div id="loading-msg" class="loading-state">Conectando ao Firebase...</div>
+
+    <!-- ÁREA DE RESULTADOS -->
+    <div id="results-area">
+        
+        <!-- Dados Demográficos (ATUALIZADO) -->
+        <div class="patient-info-grid">
+            <div class="info-item">
+                <small>Iniciais</small>
+                <strong id="res-iniciais">-</strong>
+            </div>
+            <div class="info-item">
+                <small>Profissão</small>
+                <strong id="res-prof">-</strong>
+            </div>
+            <div class="info-item">
+                <small>Idade</small>
+                <strong id="res-idade">-</strong>
+            </div>
+            <div class="info-item">
+                <small>Sexo</small>
+                <strong id="res-sexo">-</strong>
+            </div>
+            <div class="info-item">
+                <small>Data Avaliação</small>
+                <strong id="res-data">-</strong>
+            </div>
+        </div>
+
+        <!-- Cards Principais -->
+        <div class="score-grid">
+            <!-- Card Sono -->
+            <div class="score-card">
+                <span class="score-label">Qualidade do Sono (MSQ)</span>
+                <div id="sleep-circle" class="score-circle">--</div>
+                <div id="sleep-text" class="score-subtext">--</div>
+            </div>
+
+            <!-- Card IMC -->
+            <div class="score-card">
+                <span class="score-label">Índice de Massa Corporal</span>
+                <div id="imc-circle" class="score-circle">--</div>
+                <div id="imc-text" class="score-subtext">--</div>
+            </div>
+        </div>
+
+        <!-- Explicação -->
+        <div class="explanation-box">
+            <span class="explanation-title">Legenda dos Resultados</span>
+            <ul class="detail-list">
+                <li><strong>≤ 24 pts:</strong> Boa qualidade do sono.</li>
+                <li><strong>25-27 pts:</strong> Dificuldade leve.</li>
+                <li><strong>28-30 pts:</strong> Dificuldade moderada.</li>
+                <li><strong>> 30 pts:</strong> Dificuldade severa.</li>
+            </ul>
+            <p style="margin-top:15px; font-size:0.85rem; opacity:0.8">
+                *O IMC é calculado com base no peso e altura fornecidos.
+            </p>
+        </div>
+
+    </div>
+</div>
+
+<footer>
+    &copy; 2025 MSQ-BR. Todos os direitos reservados.
+</footer>
+
+<!-- SCRIPT LÓGICO -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+    import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+
+    // --- CONFIGURAÇÃO FIREBASE ---
+    const firebaseConfig = {
+        apiKey: "AIzaSyDDA4tBza7xTYUQXpEuoBdOiOGzY1ACCvY",
+        authDomain: "msqbr-4c23b.firebaseapp.com",
+        projectId: "msqbr-4c23b",
+        storageBucket: "msqbr-4c23b.firebasestorage.app",
+        messagingSenderId: "198514532428",
+        appId: "1:198514532428:web:3d906718e924624b4014e9",
+        measurementId: "G-K7WW42MMK6"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    let allPatientsData = [];
+
+    // --- FUNÇÕES AUXILIARES ---
+
+    function calculateAge(birthDateString) {
+        if (!birthDateString) return "?";
+        const today = new Date();
+        const birthDate = new Date(birthDateString);
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        return age;
+    }
+
+    function calculateIMC(weight, height) {
+        if (!weight || !height) return { val: 0, text: "N/A", class: "bg-mild" };
+        const imc = weight / (height * height);
+        let text = "", cls = "";
+
+        if (imc < 18.5) { text = "Abaixo do Peso"; cls = "bg-mild"; }
+        else if (imc < 25) { text = "Peso Normal"; cls = "bg-good"; }
+        else if (imc < 30) { text = "Sobrepeso"; cls = "bg-mod"; }
+        else { text = "Obesidade"; cls = "bg-severe"; }
+
+        return { val: imc.toFixed(1), text: text, class: cls };
+    }
+
+    function getSleepClass(score) {
+        if (score <= 24) return { class: "bg-good", text: "Boa Qualidade" };
+        if (score <= 27) return { class: "bg-mild", text: "Dificuldade Leve" };
+        if (score <= 30) return { class: "bg-mod", text: "Dificuldade Moderada" };
+        return { class: "bg-severe", text: "Dificuldade Severa" };
+    }
+
+    // --- CARREGAMENTO DE DADOS ---
+    async function loadDatabase() {
+        const select = document.getElementById('patientSelect');
+        const loadingMsg = document.getElementById('loading-msg');
+
+        try {
+            let q = query(collection(db, "avaliacoes_sono"), orderBy("dataEnvio", "desc"));
+            let querySnapshot;
+            
+            try {
+                querySnapshot = await getDocs(q);
+            } catch (e) {
+                console.warn("Índice não encontrado, carregando sem ordenação.");
+                querySnapshot = await getDocs(collection(db, "avaliacoes_sono"));
+            }
+
+            select.innerHTML = '<option value="">-- Selecione uma avaliação --</option>';
+            allPatientsData = [];
+
+            if (querySnapshot.empty) {
+                select.innerHTML = '<option>Nenhum dado encontrado</option>';
+                loadingMsg.innerText = "Banco de dados vazio.";
+                return;
+            }
+
+            querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                
+                // 1. Formatar Data
+                let dateLabel = "Data desconhecida";
+                if (data.dataEnvio && data.dataEnvio.toDate) {
+                    dateLabel = data.dataEnvio.toDate().toLocaleDateString('pt-BR');
+                }
+
+                // 2. Gerar Label do Dropdown (Iniciais - Data)
+                const info = data.identificacao || {};
+                // Prioriza o campo 'iniciais', se não existir, tenta 'nome', se não 'Anônimo'
+                const rawInitials = info.iniciais || info.nome || "ANÔNIMO";
+                const initials = rawInitials.toUpperCase();
+
+                const label = `${initials} - ${dateLabel}`;
+                
+                allPatientsData.push({ id: doc.id, ...data, formattedDate: dateLabel });
+
+                const option = document.createElement('option');
+                option.value = doc.id;
+                option.textContent = label;
+                select.appendChild(option);
+            });
+
+            loadingMsg.style.display = 'none';
+
+        } catch (error) {
+            console.error("Erro ao buscar dados:", error);
+            loadingMsg.innerText = "Erro de conexão. Verifique o console.";
+        }
+    }
+
+    // --- ATUALIZAÇÃO DA TELA ---
+    function updateDashboard(id) {
+        const resultsArea = document.getElementById('results-area');
+        
+        if (!id) {
+            resultsArea.style.display = 'none';
+            return;
+        }
+
+        const record = allPatientsData.find(p => p.id === id);
+        if (!record) return;
+
+        const idt = record.identificacao;
+
+        // Preencher Info Básica
+        // CORREÇÃO: Exibindo Iniciais e Profissão separadamente
+        document.getElementById('res-iniciais').innerText = idt.iniciais || idt.nome || "-";
+        document.getElementById('res-prof').innerText = idt.profissao || "-";
+        
+        document.getElementById('res-sexo').innerText = idt.sexo;
+        document.getElementById('res-data').innerText = record.formattedDate;
+        document.getElementById('res-idade').innerText = calculateAge(idt.nascimento) + " anos";
+
+        // Calcular e Renderizar IMC
+        const imcData = calculateIMC(idt.peso, idt.altura);
+        const imcCircle = document.getElementById('imc-circle');
+        const imcText = document.getElementById('imc-text');
+
+        imcCircle.className = `score-circle ${imcData.class}`;
+        imcCircle.innerText = imcData.val;
+        imcText.innerText = imcData.text;
+        imcText.className = `score-subtext ${imcData.class.replace('bg-', 'text-')}`;
+
+        // Renderizar Score Sono
+        const sleepData = getSleepClass(record.scoreTotal);
+        const sleepCircle = document.getElementById('sleep-circle');
+        const sleepText = document.getElementById('sleep-text');
+
+        sleepCircle.className = `score-circle ${sleepData.class}`;
+        sleepCircle.innerText = record.scoreTotal;
+        sleepText.innerText = record.resultado;
+        sleepText.className = `score-subtext ${sleepData.class.replace('bg-', 'text-')}`;
+
+        resultsArea.style.display = 'block';
+        
+        requestAnimationFrame(() => {
+            sleepCircle.classList.remove('animate');
+            imcCircle.classList.remove('animate');
+            void sleepCircle.offsetWidth;
+            sleepCircle.classList.add('animate');
+            imcCircle.classList.add('animate');
+        });
+    }
+
+    // --- EVENTOS ---
+    document.addEventListener('DOMContentLoaded', () => {
+        loadDatabase();
+
+        document.getElementById('patientSelect').addEventListener('change', (e) => {
+            updateDashboard(e.target.value);
+        });
+    });
+
+</script>
+
+</body>
+</html>

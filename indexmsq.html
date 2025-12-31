@@ -3,18 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Saúde na Tela - Portal de Avaliação</title>
+    <title>MSQ-BR - Avaliação de Sintomas</title>
     <!-- Ícones Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
             --primary: #0056b3;    /* Azul Principal */
             --secondary: #004494;  /* Azul Escuro */
-            --teal: #20c997;       /* Verde para SF-36 */
+            --teal: #20c997;       /* Verde para Resultados */
             --teal-dark: #1aa179;
-            --purple: #6f42c1;     /* Roxo */
-            --orange: #fd7e14;     /* Laranja para Projeto */
-            --cyan: #17a2b8;       
+            --purple: #6f42c1;     /* Roxo para Sono */
+            --orange: #fd7e14;     /* Laranja para Referências */
             --text: #333;
             --white: #ffffff;
         }
@@ -46,7 +45,7 @@
         }
 
         .logo-area { display: flex; align-items: center; gap: 12px; }
-        .logo-img { height: 40px; width: auto; }
+        .logo-icon { font-size: 1.8rem; color: var(--primary); }
         .app-name { font-size: 1.4rem; font-weight: 700; color: #0056b3; margin: 0; }
 
         .nav-menu { list-style: none; display: flex; gap: 30px; margin: 0; padding: 0; }
@@ -90,7 +89,7 @@
         }
 
         .hero-content {
-            max-width: 1100px;
+            max-width: 1200px; /* Aumentado levemente para caber 4 cards */
             width: 100%;
         }
 
@@ -109,16 +108,16 @@
             margin-right: auto;
         }
 
-        /* Grid de 3 Colunas */
+        /* Grid de 4 Colunas */
         .action-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 25px;
+            grid-template-columns: repeat(4, 1fr); /* Alterado para 4 colunas */
+            gap: 20px; /* Gap levemente reduzido para caber melhor */
             margin-top: 30px;
         }
 
         .card {
-            padding: 35px 25px;
+            padding: 30px 20px;
             border-radius: 12px;
             transition: all 0.3s ease;
             text-decoration: none;
@@ -139,7 +138,7 @@
 
         /* Estilos Específicos dos Cards */
         
-        /* Estilo Azul Preenchido (Destaque) */
+        /* 1. Azul Preenchido */
         .card-primary-fill { 
             background-color: rgb(47, 127, 255); 
             color: var(--white); 
@@ -148,26 +147,27 @@
         .card-primary-fill:hover { background-color: var(--secondary); }
         .card-primary-fill .card-text { color: rgba(255,255,255,0.9); }
 
-        /* Estilo Borda Verde (Teal) */
+        /* 2. Borda Verde (Teal) */
         .card-teal-border { border-top: 4px solid var(--teal); }
         .card-teal-border i { color: var(--teal); }
         .card-teal-border:hover { border-color: var(--teal-dark); }
 
-        /* Estilo Borda Laranja */
+        /* 3. Borda Laranja */
         .card-orange-border { border-top: 4px solid var(--orange); }
         .card-orange-border i { color: var(--orange); }
 
-        .icon-large { font-size: 3rem; margin-bottom: 20px; }
-        .card-title { font-size: 1.3rem; font-weight: bold; margin-bottom: 12px; }
-        .card-text { font-size: 0.95rem; opacity: 0.9; color: inherit; }
-        
-        /* Ajuste de cor de texto para cards com fundo branco */
-        .card-teal-border .card-text, 
-        .card-orange-border .card-text {
-            color: #555;
+        /* 4. Borda Roxa (NOVO - Sono) */
+        .card-purple-border { border-top: 4px solid var(--purple); }
+        .card-purple-border i { color: var(--purple); }
 
-        .card-contact { border-top: 4px solid var(--cyan); }
-        .card-contact i { color: var(--cyan); }
+        .icon-large { font-size: 2.5rem; margin-bottom: 20px; } /* Ícone levemente menor para equilibrar */
+        .card-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 12px; }
+        .card-text { font-size: 0.9rem; opacity: 0.9; color: inherit; }
+        
+        .card-teal-border .card-text, 
+        .card-orange-border .card-text,
+        .card-purple-border .card-text {
+            color: #555;
         }
         
         footer {
@@ -180,20 +180,14 @@
         }
 
         /* --- MEDIA QUERIES --- */
-        @media (max-width: 900px) {
+        @media (max-width: 1024px) {
             .action-grid {
-                grid-template-columns: repeat(2, 1fr); /* Tablet: 2 colunas */
+                grid-template-columns: repeat(2, 1fr); /* Tablet/Laptop pequeno: 2x2 */
             }
-            /* O terceiro card ficará centralizado na linha de baixo se houver número ímpar */
-            .card:last-child {
-                grid-column: span 2; /* Opcional: faz o último card ocupar a largura total em tablet */
-                max-width: 50%;
-                margin: 0 auto;
-                width: 100%;
-            }
+            /* Removemos a regra do last-child pois 4 é par, fica perfeito em 2 colunas */
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 600px) {
             .app-header {
                 flex-direction: column;
                 padding: 15px 20px;
@@ -201,18 +195,12 @@
             }
 
             .logo-area { width: 100%; justify-content: center; }
-            .nav-menu { width: 100%; justify-content: center; gap: 20px; font-size: 0.9rem; }
+            .nav-menu { width: 100%; justify-content: center; gap: 15px; font-size: 0.9rem; flex-wrap: wrap; }
             .secondary-nav { display: none; }
 
             .action-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr; /* Mobile: 1 coluna */
                 padding: 0 10px;
-            }
-            
-            /* Remove o span do tablet para mobile */
-            .card:last-child {
-                grid-column: auto;
-                max-width: 100%;
             }
 
             h1 { font-size: 1.8rem; }
@@ -225,60 +213,61 @@
 <!-- MENU SUPERIOR -->
 <nav class="app-header">
     <div class="logo-area">
-        <!-- Ícone genérico de saúde -->
-        <img src="https://cdn-icons-png.flaticon.com/512/2966/2966334.png" alt="Logo" class="logo-img">
-        <h2 class="app-name">Saúde na Tela</h2>
+        <i class="fas fa-notes-medical logo-icon"></i>
+        <h2 class="app-name">MSQ-BR</h2>
     </div>
 
     <ul class="nav-menu">
-        <li><a href="index.html" class="active">Home</a></li>
-        <li><a href="msq_consentimento.html">MSQ-BR</a></li>
-        <li><a href="index-sf36.html">SF-36</a></li>
-        <li><a href="area restrista.html">Área restrita</a></li>
+        <li><a href="index.html" class="active">Questionários</a></li>
+        <li><a href="sono.html">Sono</a></li>
+        <li><a href="resultados.html">Resultados</a></li>
+        <li><a href="referencia-sono.html">Referências</a></li>
     </ul>
 </nav>
     
 <!-- MENU SECUNDÁRIO -->
 <nav class="secondary-nav">
     <div class="logo-secondary">
-        <i class="fas fa-heartbeat"></i>
-        <span>Monitoramento de Saúde</span>
+        <i class="fas fa-stethoscope"></i>
+        <span>Avaliação de Saúde do Sono</span>
     </div>
 </nav>
 
 <section class="hero">
     <div class="hero-content">
-        <h1>Bem-vindo ao Saúde na Tela</h1>
+        <h1>Questionário de Avaliação do Sono</h1>
         <p class="description">
-            Plataforma  para aplicação de questionários de saúde e acompanhamento de qualidade de vida. Selecione uma opção abaixo:
+            O MSQ-BR é uma ferramenta para rastreamento de sintomas e avaliação da qualidade do Sono. Escolha uma ação abaixo:
         </p>
 
         <div class="action-grid">
             
-            <!-- 1. CARD MSQ-BR (Destaque Azul Preenchido) -->
-            <a href="indexmsq.html" class="card card-primary-fill">
-                <i class="fas fa-file-medical icon-large"></i>
-                <div class="card-title">Questionário MSQ-BR</div>
-                <div class="card-text">Avaliação da qualidade do Sono. Clique para iniciar.</div>
+            <!-- 1. CARD APLICAÇÃO DO QUESTIONÁRIO -->
+            <a href="msq_consentimento.html" class="card card-primary-fill">
+                <i class="fas fa-clipboard-list icon-large"></i>
+                <div class="card-title">Aplicar Questionário</div>
+                <div class="card-text">Inicie uma nova avaliação MSQ para registrar sintomas atuais.</div>
             </a>
 
-            <!-- 2. CARD SF-36 (Borda Verde/Teal) -->
-            <a href="index-sf36.html" class="card card-primary-fill">
-                <i class="fas fa-running icon-large"></i>
-                <div class="card-title">Questionário SF-36</div>
-                <div class="card-text">Avaliação de Qualidade de Vida relacionada à saúde física e mental.</div>
+            <!-- 2. CARD VISUALIZAÇÃO DOS RESULTADOS -->
+            <a href="resultado.html" class="card card-teal-border">
+                <i class="fas fa-chart-line icon-large"></i>
+                <div class="card-title">Visualizar Resultados</div>
+                <div class="card-text">Acesse seus resultados anteriores.</div>
             </a>
 
-            <!-- 3. CARD DETALHES DO PROJETO (Borda Laranja) -->
-            <a href="sobre.html" class="card card-orange-border">
-                <i class="fas fa-info-circle icon-large"></i>
-                <div class="card-title">Sobre o Projeto</div>
-                <div class="card-text">Entenda mais sobre o Saúde na Tela.</div>
+            <!-- 3. CARD SONO (NOVO) -->
+            <a href="sono.html" class="card card-purple-border">
+                <i class="fas fa-bed icon-large"></i>
+                <div class="card-title">Higiene do Sono</div>
+                <div class="card-text">Entenda como melhorar sua qualidade de sono e descanso.</div>
             </a>
-            <a href="contato.html" class="card card-teal-border">
-                <i class="fas fa-envelope-open-text icon-large"></i>
-                <div class="card-title">Feedback</div>
-                <div class="card-text">Fale conosco para dúvidas, suporte ou sugestões.</div>
+
+            <!-- 4. CARD REFERÊNCIAS -->
+            <a href="referencias.html" class="card card-orange-border">
+                <i class="fas fa-book-medical icon-large"></i>
+                <div class="card-title">Referências MSQ-BR</div>
+                <div class="card-text">Consulte a base científica, interpretação de scores e documentação.</div>
             </a>
 
         </div>
@@ -286,7 +275,7 @@
 </section>
 
 <footer>
-    &copy; 2025 Saúde na Tela. Todos os direitos reservados.
+    &copy; 2025 MSQ-BR. Todos os direitos reservados.
 </footer>
 
 </body>

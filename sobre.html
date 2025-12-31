@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Propósito & Autor - SF-36 Analytics</title>
-    <!-- Ícones -->
+    <title>Saúde na Tela - Conectando Vidas</title>
+    <!-- Ícones FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
+            /* Mantendo a paleta azul/teal que transmite confiança médica */
             --primary: #0056b3;    /* Azul Principal */
             --secondary: #004494;  /* Azul Escuro */
-            --teal: #20c997;       /* Verde/Teal */
+            --teal: #20c997;       /* Verde/Teal - Saúde */
             --teal-dark: #1aa179;
             --accent: #e7f1ff;
             --text: #333;
@@ -45,7 +46,8 @@
         }
 
         .logo-area { display: flex; align-items: center; gap: 12px; }
-        .logo-img { height: 35px; width: auto; }
+        /* Ícone de monitor/saúde para o logo */
+        .logo-icon { font-size: 1.8rem; color: var(--teal); }
         .app-name { font-size: 1.3rem; font-weight: 700; color: #0056b3; margin: 0; }
 
         .nav-menu { list-style: none; display: flex; gap: 30px; margin: 0; padding: 0; }
@@ -57,7 +59,7 @@
         }
         .nav-menu a:hover::after, .nav-menu a.active::after { width: 100%; }
 
-        /* --- SEÇÃO 1: PROPÓSITO DO PROJETO (DESTAQUE) --- */
+        /* --- HERO SECTION --- */
         .project-hero {
             background: #fff;
             padding: 60px 20px 40px;
@@ -93,11 +95,11 @@
             padding: 20px 0 60px;
         }
 
-        /* Linha conectora atrás dos cards (desktop) */
+        /* Linha conectora */
         .diagram-container::before {
             content: '';
             position: absolute;
-            top: 55px; /* Ajuste para alinhar com os ícones */
+            top: 55px;
             left: 15%;
             right: 15%;
             height: 2px;
@@ -136,6 +138,7 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
+        /* Cores alternadas para os ícones */
         .concept-card:nth-child(2) .concept-icon-box { background: var(--teal); }
         .concept-card:nth-child(3) .concept-icon-box { background: var(--secondary); }
 
@@ -146,10 +149,11 @@
             margin-bottom: 5px;
         }
 
-        .concept-latin {
+        .concept-tag {
             font-size: 0.9rem;
             color: var(--primary);
-            font-style: italic;
+            font-weight: 600;
+            text-transform: uppercase;
             margin-bottom: 15px;
             display: block;
         }
@@ -160,7 +164,7 @@
             line-height: 1.5;
         }
 
-        /* --- SEÇÃO DO AUTOR (SINGELO/ESTILIZADO) --- */
+        /* --- SEÇÃO QUEM SOMOS / AUTOR --- */
         .author-section {
             background-color: #f4f7f6;
             padding: 60px 20px;
@@ -171,7 +175,6 @@
             margin: 0 auto;
         }
 
-        /* Card do Perfil Compacto */
         .author-compact {
             display: flex;
             align-items: center;
@@ -191,6 +194,7 @@
             object-fit: cover;
             border: 3px solid var(--accent);
             flex-shrink: 0;
+            background-color: #eee; /* Fallback se imagem não carregar */
         }
 
         .author-info h3 {
@@ -204,7 +208,6 @@
             font-size: 1rem;
         }
 
-        /* Quote dentro da seção do autor */
         .quote-box {
             position: relative;
             padding: 20px 40px;
@@ -215,7 +218,6 @@
         .quote-box i { color: var(--teal); font-size: 1.5rem; margin-bottom: 10px; display: block; }
         .quote-box p { font-style: italic; color: #555; font-size: 1.1rem; }
 
-        /* Grid de Trajetória (Simplificado) */
         .trajectory-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -251,7 +253,6 @@
             content: '•'; color: var(--teal); position: absolute; left: 0; font-weight: bold;
         }
 
-        /* Rodapé */
         footer {
             text-align: center;
             padding: 20px;
@@ -265,7 +266,7 @@
         /* Responsividade */
         @media (max-width: 900px) {
             .diagram-container { grid-template-columns: 1fr; gap: 40px; }
-            .diagram-container::before { display: none; } /* Remove linha no mobile */
+            .diagram-container::before { display: none; }
             
             .author-compact { flex-direction: column; text-align: center; }
             .trajectory-grid { grid-template-columns: 1fr; }
@@ -280,58 +281,59 @@
 <!-- MENU SUPERIOR -->
 <nav class="app-header">
     <div class="logo-area">
-        <img src="https://cdn-icons-png.flaticon.com/512/2966/2966334.png" alt="Logo" class="logo-img">
-        <h2 class="app-name">SF-36 Analytics</h2>
+        <!-- Ícone genérico de saúde/monitor -->
+        <i class="fas fa-laptop-medical logo-icon"></i>
+        <h2 class="app-name">Saúde na Tela</h2>
     </div>
     <ul class="nav-menu">
         <li><a href="index.html">Home</a></li>
-        <li><a href="dashboard.html">Relatório</a></li>
-        <li><a href="comparativo.html">Comparação</a></li>
-        <li><a href="autor.html" class="active">Sobre</a></li>
+        <li><a href="indexmsq.html">MSQ-BR</a></li>
+        <li><a href="index-sf36.html">SF-36</a></li>
+        <li><a href="#" class="active">Sobre</a></li>
     </ul>
 </nav>
 
 <!-- SEÇÃO PRINCIPAL: PROPÓSITO DO PROJETO -->
 <section class="project-hero">
-    <h1 class="project-title">Propósito do Projeto</h1>
-    <p class="project-subtitle">Saúde Integral & Tecnologia</p>
+    <h1 class="project-title">Saúde na Tela</h1>
+    <p class="project-subtitle">Tecnologia, Acessibilidade & Cuidado Humano</p>
 
-    <!-- DIAGRAMA VISUAL (3 PILARES) -->
+    <!-- DIAGRAMA VISUAL (3 PILARES ADAPTADOS) -->
     <div class="diagram-container">
         
-        <!-- Pilar 1: A Ideia -->
+        <!-- Pilar 1: Conectividade -->
         <div class="concept-card">
             <div class="concept-icon-box">
-                <i class="fas fa-brain"></i>
+                <i class="fas fa-wifi"></i>
             </div>
-            <h3 class="concept-title">A Ideia</h3>
-            <span class="concept-latin">"Nosce te ipsum"</span>
+            <h3 class="concept-title">Conectividade</h3>
+            <span class="concept-tag">Sem Fronteiras</span>
             <p class="concept-text">
-                Reconhecer os vários domínios da saúde física e mental é crucial. Entender quais problemas mais impactam a qualidade de vida é o primeiro passo para a cura.
+                A barreira geográfica não pode mais ser um impedimento para o acesso à saúde especializada.
             </p>
         </div>
 
-        <!-- Pilar 2: O Projeto -->
+        <!-- Pilar 2: O Paciente -->
         <div class="concept-card">
             <div class="concept-icon-box">
-                <i class="fas fa-user-md"></i>
+                <i class="fas fa-heartbeat"></i>
             </div>
-            <h3 class="concept-title">O Projeto</h3>
-            <span class="concept-latin">Foco no Paciente</span>
+            <h3 class="concept-title">Cuidado Integral</h3>
+            <span class="concept-tag">Foco no Paciente</span>
             <p class="concept-text">
-                A medicina de precisão valoriza a percepção do paciente. Dar voz a quem sente é fundamental. Nosso objetivo é trazer ferramentas que promovam o bem-estar integral.
+                Nosso foco é a experiência do paciente. Oferecer cuidado não é só sobre resultados, mas sim sobre a percepção individual de sentir-se melhor.
             </p>
         </div>
 
-        <!-- Pilar 3: A Execução -->
+        <!-- Pilar 3: Inovação -->
         <div class="concept-card">
             <div class="concept-icon-box">
-                <i class="fas fa-microchip"></i>
+                <i class="fas fa-tablet-alt"></i>
             </div>
-            <h3 class="concept-title">A Execução</h3>
-            <span class="concept-latin">Clínica + IA</span>
+            <h3 class="concept-title">Plataforma Digital</h3>
+            <span class="concept-tag">Simples & Segura</span>
             <p class="concept-text">
-                Unimos experiência clínica ao experimentalismo tecnológico. Na era da IA, canalizamos o potencial tremendo da tecnologia para reverter em qualidade de vida real.
+                Questionários de auto-avaliação para promoção de saúde, dentro de um sistema seguro e anonimizado.
             </p>
         </div>
 
@@ -392,7 +394,7 @@
 </section>
 
 <footer>
-    &copy; 2025 SF-36 Analytics.
+    &copy; 2025 Saúde na Tela - Tecnologia a favor da vida.
 </footer>
 
 </body>

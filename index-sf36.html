@@ -3,18 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Saúde na Tela - Portal de Avaliação</title>
-    <!-- Ícones Font Awesome -->
+    <title>SF-36 - Portal de Avaliação</title>
+    <!-- Ícones -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
             --primary: #0056b3;    /* Azul Principal */
             --secondary: #004494;  /* Azul Escuro */
-            --teal: #20c997;       /* Verde para SF-36 */
+            --teal: #20c997;       /* Verde para Comparativo */
             --teal-dark: #1aa179;
-            --purple: #6f42c1;     /* Roxo */
-            --orange: #fd7e14;     /* Laranja para Projeto */
-            --cyan: #17a2b8;       
+            --purple: #6f42c1;     /* Referências */
+            --orange: #fd7e14;     /* Autor */
+            --cyan: #17a2b8;       /* Contato */
+            --accent: #e7f1ff;
             --text: #333;
             --white: #ffffff;
         }
@@ -31,7 +32,7 @@
             min-height: 100vh;
         }
 
-        /* --- MENU SUPERIOR --- */
+        /* --- CSS DO MENU SUPERIOR (CORRIGIDO) --- */
         .app-header {
             background-color: #ffffff;
             padding: 10px 40px;
@@ -84,7 +85,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 40px 20px;
+            padding: 40px 20px; /* Reduzi um pouco o padding vertical */
             text-align: center;
             background: linear-gradient(135deg, #f9fbfd 0%, #eef2f5 100%);
         }
@@ -112,7 +113,7 @@
         /* Grid de 3 Colunas */
         .action-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 25px;
             margin-top: 30px;
         }
@@ -137,38 +138,30 @@
             box-shadow: 0 15px 30px rgba(0,0,0,0.1);
         }
 
-        /* Estilos Específicos dos Cards */
+        /* Cores dos Cards */
+        .card-patient { background-color: rgb(47, 127, 255); color: var(--white); border: none; }
+        .card-patient:hover { background-color: var(--secondary); }
+        .card-patient .card-text { color: rgba(255,255,255,0.9); }
+
+        .card-doctor { border-top: 4px solid var(--primary); }
+        .card-doctor i { color: var(--primary); }
+
+        .card-compare { border-top: 4px solid var(--teal); }
+        .card-compare i { color: var(--teal); }
+        .card-compare:hover { border-color: var(--teal-dark); }
+
+        .card-ref { border-top: 4px solid var(--purple); }
+        .card-ref i { color: var(--purple); }
         
-        /* Estilo Azul Preenchido (Destaque) */
-        .card-primary-fill { 
-            background-color: rgb(47, 127, 255); 
-            color: var(--white); 
-            border: none; 
-        }
-        .card-primary-fill:hover { background-color: var(--secondary); }
-        .card-primary-fill .card-text { color: rgba(255,255,255,0.9); }
-
-        /* Estilo Borda Verde (Teal) */
-        .card-teal-border { border-top: 4px solid var(--teal); }
-        .card-teal-border i { color: var(--teal); }
-        .card-teal-border:hover { border-color: var(--teal-dark); }
-
-        /* Estilo Borda Laranja */
-        .card-orange-border { border-top: 4px solid var(--orange); }
-        .card-orange-border i { color: var(--orange); }
-
-        .icon-large { font-size: 3rem; margin-bottom: 20px; }
-        .card-title { font-size: 1.3rem; font-weight: bold; margin-bottom: 12px; }
-        .card-text { font-size: 0.95rem; opacity: 0.9; color: inherit; }
-        
-        /* Ajuste de cor de texto para cards com fundo branco */
-        .card-teal-border .card-text, 
-        .card-orange-border .card-text {
-            color: #555;
+        .card-author { border-top: 4px solid var(--orange); }
+        .card-author i { color: var(--orange); }
 
         .card-contact { border-top: 4px solid var(--cyan); }
         .card-contact i { color: var(--cyan); }
-        }
+
+        .icon-large { font-size: 3rem; margin-bottom: 20px; }
+        .card-title { font-size: 1.3rem; font-weight: bold; margin-bottom: 12px; }
+        .card-text { font-size: 0.95rem; opacity: 0.9; color: #555; }
         
         footer {
             text-align: center;
@@ -179,43 +172,47 @@
             margin-top: auto;
         }
 
-        /* --- MEDIA QUERIES --- */
+        /* --- MEDIA QUERIES PARA MOBILE (CORRIGIDO) --- */
         @media (max-width: 900px) {
             .action-grid {
                 grid-template-columns: repeat(2, 1fr); /* Tablet: 2 colunas */
             }
-            /* O terceiro card ficará centralizado na linha de baixo se houver número ímpar */
-            .card:last-child {
-                grid-column: span 2; /* Opcional: faz o último card ocupar a largura total em tablet */
-                max-width: 50%;
-                margin: 0 auto;
-                width: 100%;
-            }
         }
 
         @media (max-width: 768px) {
+            /* Ajuste do Cabeçalho Principal */
             .app-header {
-                flex-direction: column;
-                padding: 15px 20px;
+                flex-direction: column; /* Empilha logo e menu */
+                padding: 15px 20px;     /* Reduz padding lateral */
                 gap: 15px;
             }
 
-            .logo-area { width: 100%; justify-content: center; }
-            .nav-menu { width: 100%; justify-content: center; gap: 20px; font-size: 0.9rem; }
-            .secondary-nav { display: none; }
-
-            .action-grid {
-                grid-template-columns: 1fr;
-                padding: 0 10px;
+            .logo-area {
+                width: 100%;
+                justify-content: center; /* Centraliza logo */
             }
-            
-            /* Remove o span do tablet para mobile */
-            .card:last-child {
-                grid-column: auto;
-                max-width: 100%;
+
+            .nav-menu {
+                width: 100%;
+                justify-content: center; /* Centraliza menu */
+                gap: 20px;
+                font-size: 0.9rem;
+            }
+
+            /* Oculta a barra secundária no mobile para economizar espaço */
+            .secondary-nav {
+                display: none;
+            }
+
+            /* Ajuste do Grid para Celular */
+            .action-grid {
+                grid-template-columns: 1fr; /* 1 coluna */
+                max-width: 100%; /* Remove limite de largura */
+                padding: 0 10px;
             }
 
             h1 { font-size: 1.8rem; }
+            
             .hero { padding: 30px 15px; }
         }
     </style>
@@ -225,68 +222,79 @@
 <!-- MENU SUPERIOR -->
 <nav class="app-header">
     <div class="logo-area">
-        <!-- Ícone genérico de saúde -->
         <img src="https://cdn-icons-png.flaticon.com/512/2966/2966334.png" alt="Logo" class="logo-img">
-        <h2 class="app-name">Saúde na Tela</h2>
+        <h2 class="app-name">SF-36 Analytics</h2>
     </div>
 
     <ul class="nav-menu">
         <li><a href="index.html" class="active">Home</a></li>
-        <li><a href="msq_consentimento.html">MSQ-BR</a></li>
-        <li><a href="index-sf36.html">SF-36</a></li>
-        <li><a href="area restrista.html">Área restrita</a></li>
+        <li><a href="dashboard.html">Relatório</a></li>
+        <li><a href="comparativo.html">Comparação</a></li>
     </ul>
 </nav>
     
-<!-- MENU SECUNDÁRIO -->
+<!-- MENU SECUNDÁRIO (Oculto no mobile via CSS) -->
 <nav class="secondary-nav">
     <div class="logo-secondary">
         <i class="fas fa-heartbeat"></i>
-        <span>Monitoramento de Saúde</span>
+        <span>Uma ferramenta gratuita para sua saúde</span>
     </div>
 </nav>
 
 <section class="hero">
     <div class="hero-content">
-        <h1>Bem-vindo ao Saúde na Tela</h1>
+        <h1>Avaliação de Qualidade de Vida</h1>
         <p class="description">
-            Plataforma  para aplicação de questionários de saúde e acompanhamento de qualidade de vida. Selecione uma opção abaixo:
+            Ferramenta validada internacionalmente para análise de saúde física e mental.
+            Selecione a opção desejada abaixo.
         </p>
 
         <div class="action-grid">
             
-            <!-- 1. CARD MSQ-BR (Destaque Azul Preenchido) -->
-            <a href="indexmsq.html" class="card card-primary-fill">
-                <i class="fas fa-file-medical icon-large"></i>
-                <div class="card-title">Questionário MSQ-BR</div>
-                <div class="card-text">Avaliação da qualidade do Sono. Clique para iniciar.</div>
+            <!-- 1. PACIENTE -->
+            <a href="sf36.html" class="card card-patient">
+                <i class="fas fa-user-injured icon-large"></i>
+                <div class="card-title">Quero Aplicar</div>
+                <div class="card-text">Clique aqui para responder ao questionário de avaliação.</div>
             </a>
 
-            <!-- 2. CARD SF-36 (Borda Verde/Teal) -->
-            <a href="index-sf36.html" class="card card-primary-fill">
-                <i class="fas fa-running icon-large"></i>
-                <div class="card-title">Questionário SF-36</div>
-                <div class="card-text">Avaliação de Qualidade de Vida relacionada à saúde física e mental.</div>
+            <!-- 2. MÉDICO: Dashboard -->
+            <a href="dashboard.html" class="card card-doctor">
+                <i class="fas fa-chart-bar icon-large"></i>
+                <div class="card-title">Resultados Individuais</div>
+                <div class="card-text">Visualize o perfil de saúde detalhado de um paciente específico.</div>
             </a>
 
-            <!-- 3. CARD DETALHES DO PROJETO (Borda Laranja) -->
-            <a href="sobre.html" class="card card-orange-border">
-                <i class="fas fa-info-circle icon-large"></i>
+            <!-- 3. MÉDICO: Comparativo -->
+            <a href="comparativo.html" class="card card-compare">
+                <i class="fas fa-chart-line icon-large"></i>
+                <div class="card-title">Avaliação Comparativa</div>
+                <div class="card-text">Compare avaliações realizadas ao longo do tempo.</div>
+            </a>
+
+            <!-- 4. REFERÊNCIAS -->
+            <a href="referencias.html" class="card card-ref">
+                <i class="fas fa-book-medical icon-large"></i>
+                <div class="card-title">Referências</div>
+                <div class="card-text">Base científica e validação do questionário SF-36.</div>
+            </a>
+
+            <!-- 5. AUTOR -->
+            <a href="autor.html" class="card card-author">
+                <i class="fas fa-user-tie icon-large"></i>
                 <div class="card-title">Sobre o Projeto</div>
-                <div class="card-text">Entenda mais sobre o Saúde na Tela.</div>
+                <div class="card-text">Conheça a proposta do sistema.</div>
             </a>
-            <a href="contato.html" class="card card-teal-border">
-                <i class="fas fa-envelope-open-text icon-large"></i>
-                <div class="card-title">Feedback</div>
-                <div class="card-text">Fale conosco para dúvidas, suporte ou sugestões.</div>
-            </a>
+
+            <!-- 6. CONTATO -->
+            
 
         </div>
     </div>
 </section>
 
 <footer>
-    &copy; 2025 Saúde na Tela. Todos os direitos reservados.
+    &copy; 2025 SF-36 Analytics. by Pedro Padim.
 </footer>
 
 </body>
